@@ -3,23 +3,27 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
-	"net"
-	"net/rpc"
+	"net/http"
 	"strconv"
+	"sync"
 	"time"
 )
 
 type Document struct {
-	ID        int
-	Name      string
-	TimeStamp string
-	PrevHash  string
-	Hash      string
+	ID        int    `json:"id"`
+	Name      string `json:"name"`
+	TimeStamp string `json:"timestamp"`
+	PrevHash  string `json:"prevhash"`
+	Hash      string `json:"hash"`
 }
+
 type Blockchain struct {
-	Document []Document
+	sync.Mutex
+	Documents []Document
 }
 
 func CalcHash(doc Document) string {
@@ -36,53 +40,64 @@ func CreateGenesis() Document {
 	return genesis
 }
 
-func (bc *Blockchain) AddBlock(name string, hash string, reply *string) error {
-	prevDocument := bc.Document[len(bc.Document)-1]
-	neWDocument := Document{
+func (bc *Blockchain) AddBlock(name string) string {
+	bc.Lock()
+	defer bc.Unlock()
+
+	prevDocument := bc.Documents[len(bc.Documents)-1]
+	newDocument := Document{
 		ID:        prevDocument.ID + 1,
 		Name:      name,
 		TimeStamp: time.Now().String(),
-		PrevHash:  prevDocument.PrevHash,
-		Hash:      hash,
+		PrevHash:  prevDocument.Hash,
 	}
-	bc.Document = append(bc.Document, neWDocument)
-	*reply = neWDocument.Hash
-	return nil
+	newDocument.Hash = CalcHash(newDocument)
+	bc.Documents = append(bc.Documents, newDocument)
+	return newDocument.Hash
 }
 
-func (bc *Blockchain) DocumentHisttory(args int, reply *[]Document) error {
-	*reply = bc.Document
-	return nil
+func (bc *Blockchain) DocumentHistory() []Document {
+	bc.Lock()
+	defer bc.Unlock()
+	return bc.Documents
 }
 
-func StartServer(port string, blockchain *Blockchain) {
-	rpc.Register(blockchain)
-	l, err := net.Listen("tcp", ":"+port)
+var bc = &Blockchain{
+	Documents: []Document{CreateGenesis()},
+}
+
+func addDocumentHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		name := r.FormValue("name")
+		hash := bc.AddBlock(name)
+		w.Write([]byte(hash))
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
+}
+
+func getDocumentsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(bc.DocumentHistory())
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
-		log.Fatalln("ERROR STARTING THE SERVER: ", err)
+		http.Error(w, "Error parsing template", http.StatusInternalServerError)
 		return
 	}
-	defer l.Close()
-	fmt.Println("Server started at port: ", port)
-	for {
-		conn, err := l.Accept()
-		if err != nil {
-			log.Fatalln("CONNECTION ERROR: ", err)
-			continue
-		}
-		go rpc.ServerConn(conn)
-	}
+	tmpl.Execute(w, nil)
 }
 
-func AddDocument(client *rpc.Client, name string, hash string) {
-	var reply string
-	err := client.Call("Blockchain.AddBlock", 0, &reply)
-	if err != nil {
-		log.Fatalln("ERROR ADDING DOCUMMENT: ", err)
-		return
-	}
-	fmt.Println("ADDED DOCUMENT WITH HASH", reply)
-}
+func main() {
+	fs := http.FileServer(http.Dir("styles"))
+	http.Handle("/styles/", http.StripPrefix("/styles/", fs))
 
-func GetDocument(client *rpc.Client) []Document {
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/add-document", addDocumentHandler)
+	http.HandleFunc("/get-documents", getDocumentsHandler)
+
+	fmt.Println("Server started at port 8081")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
