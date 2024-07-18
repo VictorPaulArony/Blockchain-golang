@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Blockchain</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <script>
+        async function addDocument(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+
+            const response = await fetch('/add-document', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `name=${name}`,
+            });
+
+            if (response.ok) {
+                const hash = await response.text();
+                alert('Document added with hash: ' + hash);
+                loadDocuments();
+            } else {
+                alert('Error adding document');
+            }
+        }
+
+        async function loadDocuments() {
+            const response = await fetch('/get-documents');
+            const documents = await response.json();
+
+            const recordsList = document.getElementById('records-list');
+            recordsList.innerHTML = '';
+
+            documents.forEach(doc => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `ID: ${doc.id}, Name: ${doc.name}, Timestamp: ${doc.timestamp}, PrevHash: ${doc.prevhash}, Hash: ${doc.hash}`;
+                recordsList.appendChild(listItem);
+            });
+        }
+
+        window.onload = loadDocuments;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Healthcare Blockchain Records</h1>
+
+        <form onsubmit="addDocument(event)">
+            <label for="name">Document Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <button type="submit">Add Document</button>
+        </form>
+
+        <h2>Document History:</h2>
+        <ul id="records-list"></ul>
+    </div>
+</body>
+</html>
