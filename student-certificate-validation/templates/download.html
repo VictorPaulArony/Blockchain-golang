@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dowmload Certificate</title>
+</head>
+<body>
+    <div class="form-container">
+    <h2>your Certificate</h2>
+    <form action="/view-download" method="POST">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Reg No</th>
+                <th>Course</th>
+                <th>Created At</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.RegNo}}</td>
+                <td>{{.Course}}</td>
+                <td>{{.CreatedAt}}</td>
+                <td>{{.Status}}</td>
+                <td>
+                    {{if eq .Status "Completed"}}
+                    <a href="/downlad-certificate? = {{.ID}}">Download</a>
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    </form>
+    <a href="/student-dashboard"> Student Dashboard</a>
+</body>
+</html>

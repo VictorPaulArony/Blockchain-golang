@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/templates/css/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Request Certificate</h1>
+        <form method="POST" action="/request-certificate">
+            <label for="name">Student Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="regno">Registration No:</label>
+            <input type="text" id="regno" name="regno" required>
+            <label for="course">Course:</label>
+            <input type="text" id="course" name="course" required>
+            <button type="submit">Request Certificate</button>
+        </form>
+        <p><a href="/">Back to Dashboard</a></p>
+        <a href="/view-download">view Certificate</a> 
+    </div>
+</body>
+</html>

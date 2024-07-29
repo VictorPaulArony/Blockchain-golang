@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Process Certificate</title>
+    <link rel="stylesheet" href="/templates/css/style.css">
+</head>
+<body>
+    <h1>Process Student Certificate</h1>
+    <form method="POST" action="/process-certificate">
+        <label for="studentRegNo">Student Registration No:</label>
+        <input type="text" id="studentRegNo" name="studentRegNo" required>
+        <br>
+        <label for="course">Course:</label>
+        <input type="text" id="course" name="course" required>
+        <br>
+        <label for="certContent">Certificate Content:</label>
+        <textarea id="certContent" name="certContent" required></textarea>
+        <br>
+        <button type="submit">Generate Certificate</button>
+    </form>
+    <a href="/view-request"> view requests</a>
+</body>
+</html>
+

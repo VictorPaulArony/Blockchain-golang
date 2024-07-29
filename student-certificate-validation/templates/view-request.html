@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view Requests </title>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Certificate Generation form</h1>
+        <form action="/view-request" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Reg No</th>
+                    <th>Course</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Name}}</td>
+                    <td>{{.RegNo}}</td>
+                    <td>{{.Course}}</td>
+                    <td>{{.CreatedAt}}</td>
+                    <td>{{.Status}}</td>
+                     <td>
+                        {{if eq .Status "Pending"}}
+                        <a href="/process-certificate?id={{.ID}}">Process</a>
+                        {{else}}
+                        <a href="/download?id={{.ID}}">Download</a>
+                        {{end}}
+                    </td> 
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </form>
+        <a href="/admin-dashboard"> admin dashboard</a>
+    </div>
+</body>
+</html>
