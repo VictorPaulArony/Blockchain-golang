@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <form action="/staff-registration" method="POST">
+            <label for="name"> Name</label>
+            <input type="text" name="name" id="name" placeholder="Enter Your Name" required>
+            <br>
+            <label for="phone"> Phone Number</label>
+            <input type="text" name="phone" id="phone" placeholder="Enter Phone Number" required>
+            <br>
+            <label for="location"> Location</label>
+            <input type="text" name="location" id="location" placeholder="Enter Location" required>
+            <br>
+            <label for="password"> Password</label>
+            <input type="text" name="password" id="password" placeholder="Enter your Password" required>
+            <br>
+            <p>Already have an account <a href="/login"> login</a> </p>
+            
+        </form>
+    </div>
+</body>
+</html>
