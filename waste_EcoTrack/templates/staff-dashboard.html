@@ -1,18 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>staff Dashboard</title>
-</head>
-<body>
+    <link rel="stylesheet" href="static/staff-dashboard.css" />
+  </head>
+  <body>
     <div class="container">
-        <form action="/staff-dashboard" method="POST">
+      <form action="/company-dashboard" method="POST">
+        <header class="staff-header">
+          <div class="staff-header-text">
+            <h3>Last tasks</h3>
+            <p>{All tasks} total, done and in progres</p>
+          </div>
+          <div class="staff-number">
+            <div class="left">
+              <p>{number of handled tasks}</p>
+              <p>Done</p>
+            </div>
+            <div class="numbers">
+              <p>{In Progress }</p>
 
-
-
-            
-        </form>
+              <p>In Progress</p>
+            </div>
+          </div>
+        </header>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>User Id</th>
+                <th>Nature</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Confirm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><input type="checkbox" name="confirm" id="" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
     </div>
-</body>
+  </body>
 </html>
