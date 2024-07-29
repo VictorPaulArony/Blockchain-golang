@@ -87,3 +87,8 @@ func ResidentRequestHandler(w http.ResponseWriter, r *http.Request) {
 func StaffProcessRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 }
+
+//function that allow the staff to view the requested collections
+func ViewRequestHandler(w http.ResponseWriter, r *http.Request) {
+
+}
