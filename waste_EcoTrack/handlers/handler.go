@@ -15,3 +15,4 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "oops something went wrong")
 	}
 }
+
