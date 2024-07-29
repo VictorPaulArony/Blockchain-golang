@@ -58,3 +58,32 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//function to allow the residents to register to the system
+func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//function that enable the residents to Login to the system
+func ResidentLoginHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//function that allow the staffs of the company to register to the system
+func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//functionthat enable the staffs to login to the system
+func StaffLoginHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//function that allow the resident to make collection requests
+func ResidentRequestHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//function that allows thestaff to process the request made by the residents
+func StaffProcessRequestHandler(w http.ResponseWriter, r *http.Request) {
+
+}
