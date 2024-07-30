@@ -22,6 +22,7 @@ type Location struct {
 
 type Staff struct {
 	Name     string `json:"name"`
+	StaffId  string `json:"staffid"`
 	Phone    string `json:"phone"`
 	Location string `json:"location"`
 	Password string `json:"password"`

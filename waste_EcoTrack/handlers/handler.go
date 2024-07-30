@@ -77,6 +77,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
+func StaffDshboardHandler(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("templates/resident-dashboard.html"))
+	e := temp.Execute(w, nil)
+	if e != nil {
+		log.Fatalln("Internal server error")
+		fmt.Fprint(w, "oops something went wrong")
+	}
+}
 
 //function to allow the residents to register to the system
 func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
@@ -150,53 +158,63 @@ func ResidentLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 //function that allow the staffs of the company to register to the system
 func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		name := r.FormValue("name")
-		phone := r.FormValue("phone")
-		location := r.FormValue("location")
-		password := database.CreateHash(r.FormValue("password"))
-
-		staff := database.Staff{
-			Name:     name,
-			Phone:    phone,
-			Location: location,
-			Password: password,
-		}
-
-		// Add new staff
-		staffs = append(staffs, staff)
-
-		// Save staff
-		if err := database.SaveStaff(staffs); err != nil {
-			http.Error(w, "Failed to save staff", http.StatusInternalServerError)
-			return
-		}
-
-		http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
-	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	if r.Method == http.MethodGet {
+		temp := template.Must(template.ParseFiles("templates/staff-registration.html"))
+		temp.Execute(w, nil)
+		return
 	}
+
+	muSync.Lock()
+	defer muSync.Unlock()
+
+	name := r.FormValue("name")
+	staffid := r.FormValue("staffid")
+	phone := r.FormValue("phone")
+	location := r.FormValue("location")
+	password := database.CreateHash(r.FormValue("password"))
+
+	staff := database.Staff{
+		Name:     name,
+		StaffId:  staffid,
+		Phone:    phone,
+		Location: location,
+		Password: password,
+	}
+
+	// Add new staff
+	staffs = append(staffs, staff)
+	if err := database.SaveStaff(staffs); err != nil {
+		http.Error(w, "Failed to save staff", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
 }
 
 //functionthat enable the staffs to login to the system
 func StaffLoginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		phone := r.FormValue("phone")
-		password := database.CreateHash(r.FormValue("password"))
-
-		// Authenticate staff
-		for _, staff := range staffs {
-			if staff.Phone == phone && staff.Password == password {
-				http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
-				return
-			}
-		}
-
-		//
-		fmt.Fprint(w, "INVALID USER PASSWORDOR ID")
-	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	if r.Method == http.MethodGet {
+		temp := template.Must(template.ParseFiles("templates/staff-login.html"))
+		temp.Execute(w, nil)
+		return
 	}
+	muSync.Lock()
+	defer muSync.Unlock()
+
+	staffid := r.FormValue("staffid")
+	password := database.CreateHash(r.FormValue("password"))
+
+	// Authenticate staff
+	for _, staff := range staffs {
+		if staff.StaffId == staffid && staff.Password == password {
+			http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
+			return
+		}
+	}
+
+	//
+	fmt.Fprint(w, "INVALID USER PASSWORD OR ID")
+
 }
 
 //function that allow the resident to make collection requests
