@@ -17,6 +17,13 @@ type Collection struct {
 	PrevHash  string `json:"prevhash"`
 	Hash      string `json:"hash"`
 }
+type Reward struct {
+	ID        int    `json:"id"`
+	Token     string `json:"token"`
+	TimeStamp string `json:"timestamp"`
+	PrevHash  string `json:"prevhash"`
+	Hash      string `json:"hash"`
+}
 type Blockchain struct {
 	sync.Mutex
 	collections []Collection
