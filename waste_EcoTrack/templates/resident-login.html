@@ -3,19 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resident Login Page</title>
+    <title>Waste Management Home Page</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f0; /* Light green background for the page */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-bar {
+            background-color: #004d00; /* Dark green background for the nav bar */
+            color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-bar li {
+            margin: 0 15px;
+        }
+
+        .nav-bar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .nav-bar a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            flex: 1; /* Allows the content area to expand and push the footer to the bottom */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .banner {
+            width: 100%;
+            height: 60px;
+            overflow: hidden;
+            position: relative;
+            background-color: #004d00; /* Dark green background for the banner */
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .banner-content {
+            white-space: nowrap;
+            position: absolute;
+            width: 100%;
+            animation: slide 10s linear infinite;
+            font-size: 1.2em;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid #009688; /* Teal border color */
+            border-radius: 8px;
+            background-color: #ffffff; /* White background for content blocks */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
+            text-align: center;
+        }
+
+        .form-container h2 {
+            margin-top: 0;
+            color: #004d00; /* Dark green color for headings */
+        }
+
+        .form-container input,
+        .form-container select {
+            width: calc(100% - 22px); /* Adjust width to account for padding */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #009688; /* Teal border color */
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #004d00; /* Dark green background */
+            color: #ffffff;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .form-container button:hover {
+            background-color: #003d00; /* Even darker green for hover effect */
+        }
+
+        .toggle-links {
+            margin: 10px 0;
+        }
+
+        .toggle-links a {
+            color: #009688; /* Teal color for links */
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .toggle-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            padding: 15px;
+            background-color: #003d00; /* Even darker green for footer */
+            color: #ffffff;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="form-container">
-        <form action="/resident-login" method="POST">
-            <label for="name" > Resident Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter User Name" required>
-            <br>
-            <label for="password"> Password</label>
-            <input type="text" name="password" id="password" placeholder="Enter your Password" required>
-            <br>
-            <p>Don't have an account <a href="/login"> login</a> </p>
-         </form>
+    <nav class="nav-bar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#login-register" onclick="toggleForms('login')">Login/Register</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div class="banner">
+            <div class="banner-content">
+                <span>Reduce, Reuse, Recycle!</span> | Join us in our mission to manage waste sustainably and protect the environment.
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="form-container" id="login-form">
+                <h2>Login</h2>
+                <label for="login-email">Email</label>
+                <input type="text" id="login-email" placeholder="Email" />
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Password" />
+                <button onclick="login()">Login</button>
+                <div class="toggle-links">
+                    <a href="#" onclick="toggleForms('signup')">Don't have an account? Sign Up</a>
+                </div>
+            </div>
+
+            <div class="form-container" id="signup-form" style="display: none;">
+                <h2>Sign Up</h2>
+                <label for="signup-name">Name</label>
+                <input type="text" id="signup-name" placeholder="Name" />
+                <label for="signup-id">ID Number</label>
+                <input type="text" id="signup-id" placeholder="ID Number" />
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="Email" />
+                <label for="signup-phone">Kenyan Phone Number</label>
+                <input type="tel" id="signup-phone" placeholder="Kenyan Phone Number" />
+                <label for="signup-area">Residential Area</label>
+                <select id="signup-area">
+                    <option value="">Select Residential Area</option>
+                    <option value="Kisumu_Central">Kisumu Central</option>
+                    <option value="Kisumu_East">Kisumu East</option>
+                    <option value="Kisumu_West">Kisumu West</option>
+                    <option value="Kisumu_North">Kisumu North</option>
+                    <option value="Kisumu_South">Kisumu South</option>
+                    <option value="Kisumu_South_East">Kisumu South East</option>
+                    <option value="Kisumu_South_West">Kisumu South West</option>
+                    <!-- Add more areas as needed -->
+                </select>
+                <label for="signup-building">Building/House Number</label>
+                <input type="text" id="signup-building" placeholder="Building/House Number" />
+                <button onclick="signup()">Sign Up</button>
+                <div class="toggle-links">
+                    <a href="#" onclick="toggleForms('login')">Already have an account? Login</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <footer class="footer">
+        All rights reserved by @Waste_Eco_Tech. © 2024
+    </footer>
+
+    <script>
+        function toggleForms(formType) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+
+            if (formType === 'signup') {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            } else {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            }
+        }
+
+        function login() {
+            // Implement login logic here
+            alert('Login functionality not yet implemented.');
+        }
+
+        function signup() {
+            // Implement signup logic here
+            alert('Sign Up functionality not yet implemented.');
+        }
+    </script>
 </body>
 </html>
