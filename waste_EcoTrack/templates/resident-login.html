@@ -153,7 +153,6 @@
     </style>
 </head>
 <body>
-<<<<<<< HEAD
     <nav class="nav-bar">
         <ul>
             <li><a href="#home">Home</a></li>
@@ -172,7 +171,7 @@
         </div>
 
         <div class="container">
-            <div class="form-container" id="login-form">
+            <form class="form-container" id="login-form" method="POST">
                 <h2>Login</h2>
                 <label for="login-email">Email</label>
                 <input type="text" id="login-email" placeholder="Email" />
@@ -182,9 +181,9 @@
                 <div class="toggle-links">
                     <a href="#" onclick="toggleForms('signup')">Don't have an account? Sign Up</a>
                 </div>
-            </div>
+            </form>
 
-            <div class="form-container" id="signup-form" style="display: none;">
+            <form class="form-container" id="signup-form" style="display: none;" method="POST">
                 <h2>Sign Up</h2>
                 <label for="signup-name">Name</label>
                 <input type="text" id="signup-name" placeholder="Name" />
@@ -212,21 +211,8 @@
                 <div class="toggle-links">
                     <a href="#" onclick="toggleForms('login')">Already have an account? Login</a>
                 </div>
-            </div>
+            </form>
         </div>
-=======
-    <div class="form-container">
-        <form action="/resident-login" method="POST">
-            <label for="name" > Resident Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter User Name" required>
-            <br>
-            <label for="password"> Password</label>
-            <input type="text" name="password" id="password" placeholder="Enter your Password" required>
-            <br>
-            <p>Don't have an account? <a href="/resident-register"> Sign up</a> </p>
-         </form>
->>>>>>> f463195d307acec122d738263a73fe8b45ebc6d7
-    </div>
 
     <footer class="footer">
         All rights reserved by @Waste_Eco_Tech. © 2024
