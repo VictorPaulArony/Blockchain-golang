@@ -22,7 +22,18 @@
             color: #ffffff;
             padding: 10px 20px;
             display: flex;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-bar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-bar .logo img {
+            height: 40px;
+            margin-right: 10px;
         }
 
         .nav-bar ul {
@@ -48,100 +59,51 @@
 
         .main-content {
             flex: 1; /* Allows the content area to expand and push the footer to the bottom */
-        }
-
-        .container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             padding: 20px;
         }
 
-        .banner {
-            width: 100%;
-            height: 60px;
-            overflow: hidden;
-            position: relative;
-            background-color: #004d00; /* Dark green background for the banner */
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-
-        .banner-content {
-            white-space: nowrap;
-            position: absolute;
-            width: 100%;
-            animation: slide 10s linear infinite;
-            font-size: 1.2em;
-        }
-
-        @keyframes slide {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        .form-container {
-            width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 2px solid #009688; /* Teal border color */
-            border-radius: 8px;
+        .description {
+            flex: 1;
             background-color: #ffffff; /* White background for content blocks */
+            padding: 20px;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
-            text-align: center;
+            margin-right: 20px;
         }
 
-        .form-container h2 {
-            margin-top: 0;
-            color: #004d00; /* Dark green color for headings */
+        .carousel {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
+            overflow: hidden;
         }
 
-        .form-container input,
-        .form-container select {
-            width: calc(100% - 22px); /* Adjust width to account for padding */
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #009688; /* Teal border color */
-            border-radius: 5px;
-            box-sizing: border-box;
+        .carousel img {
+            width: 100%;
+            display: none;
         }
 
-        .form-container button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #004d00; /* Dark green background */
+        .carousel img.active {
+            display: block;
+        }
+
+        .carousel .controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .carousel .controls button {
+            background-color: rgba(0, 0, 0, 0.5);
             color: #ffffff;
+            border: none;
+            padding: 10px;
             cursor: pointer;
-            margin: 10px 0;
-        }
-
-        .form-container button:hover {
-            background-color: #003d00; /* Even darker green for hover effect */
-        }
-
-        .toggle-links {
-            margin: 10px 0;
-        }
-
-        .toggle-links a {
-            color: #009688; /* Teal color for links */
-            text-decoration: none;
-            margin: 0 5px;
-        }
-
-        .toggle-links a:hover {
-            text-decoration: underline;
         }
 
         .footer {
@@ -154,6 +116,10 @@
 </head>
 <body>
     <nav class="nav-bar">
+        <div class="logo">
+            <static/img src="wasteecotracklogo.png" alt="Logo">
+            <span>Waste Management</span>
+        </div>
         <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About Us</a></li>
@@ -164,11 +130,46 @@
     </nav>
 
     <div class="main-content">
-        <div class="banner">
-            <div class="banner-content">
-                <span>Reduce, Reuse, Recycle!</span> | Join us in our mission to manage waste sustainably and protect the environment.
-            </div>
+        <div class="description">
+            <h2>About Waste Management</h2>
+            <p>Our mission is to provide sustainable waste management solutions. We strive to reduce waste, recycle materials, and manage waste in an environmentally friendly manner. Join us in our efforts to protect the environment and create a cleaner, healthier planet for future generations.</p>
         </div>
 
+        <div class="carousel">
+            <img src="image1.jpg" alt="Image 1" class="active">
+            <img src="image2.jpg" alt="Image 2">
+            <img src="image3.jpg" alt="Image 3">
+            <div class="controls">
+                <button onclick="prevSlide()">&#10094;</button>
+                <button onclick="nextSlide()">&#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 Waste Management Company. All rights reserved.
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel img');
+
+        function showSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Automatically move to the next slide every 5 seconds
+        setInterval(nextSlide, 5000);
+    </script>
 </body>
 </html>
