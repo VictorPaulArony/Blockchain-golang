@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resident Dashboard</title>
+    <link rel="stylesheet" href="static/resident-dashboard.css">
 </head>
 <body>
-    <h2>Report Waste Collection</h2>
-    <p><a href="/resident-login">login</a></p>
-    <p>Dont have an account? <a href="/resident-register">Sign up</a></p>
+    <div class="container">
+        <h2>Request for Waste Collection</h2>
+        <form action="/resident-dashboard" method="POST">
+            <label for="userId">User ID</label>
+            <input type="text" name="userId" id="userId" placeholder="Enter User ID" required>
+            <br>
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location" placeholder="Enter Location" required>
+            <br>
+            <label for="quantity">Quantity (No of bags)</label>
+            <input type="number" name="quantity" id="quantity" placeholder="Enter Quantity" required>
+            <br>
+            <button type="submit">Submit Request</button>
+        </form>
+    </div>
 </body>
 </html>
