@@ -5,13 +5,18 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
+	"time"
+	"waste_Eco_Track/blockchain"
 	"waste_Eco_Track/database"
 )
 
 var (
 	muSync    sync.Mutex
 	residents []database.Resident
+	staffs    []database.Staff
+	requests  []database.Request
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -137,25 +142,153 @@ func ResidentLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 //function that allow the staffs of the company to register to the system
 func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		name := r.FormValue("name")
+		phone := r.FormValue("phone")
+		location := r.FormValue("location")
+		password := database.CreateHash(r.FormValue("password"))
 
+		staff := database.Staff{
+			Name:     name,
+			Phone:    phone,
+			Location: location,
+			Password: password,
+		}
+
+		// Add new staff
+		staffs = append(staffs, staff)
+
+		// Save staff
+		if err := database.SaveStaff(staffs); err != nil {
+			http.Error(w, "Failed to save staff", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
 }
 
 //functionthat enable the staffs to login to the system
 func StaffLoginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		phone := r.FormValue("phone")
+		password := database.CreateHash(r.FormValue("password"))
 
+		// Authenticate staff
+		for _, staff := range staffs {
+			if staff.Phone == phone && staff.Password == password {
+				http.Redirect(w, r, "/company-dashboard", http.StatusSeeOther)
+				return
+			}
+		}
+
+		//
+		fmt.Fprint(w, "INVALID USER PASSWORDOR ID")
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
 }
 
 //function that allow the resident to make collection requests
 func ResidentRequestHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		userId := r.FormValue("user_id")
+		nature := r.FormValue("nature")
+		location := r.FormValue("location")
 
+		request := database.Request{
+			ID:        len(requests) + 1,
+			UserId:    userId,
+			Nature:    nature,
+			Location:  location,
+			CreatedAt: time.Now().String(),
+			Status:    "Pending",
+		}
+
+		muSync.Lock()
+		requests = append(requests, request)
+		muSync.Unlock()
+
+		if err := database.SaveRequest(); err != nil {
+			http.Error(w, "Failed to save request", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/resident-dashboard", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	}
 }
 
 //function that allows thestaff to process the request made by the residents
 func StaffProcessRequestHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	if idStr == "" {
+		http.Error(w, "Invalid request ID", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid request ID", http.StatusBadRequest)
+		return
+	}
 
+	muSync.Lock()
+	defer muSync.Unlock()
+	var request *database.Request
+	for i := range requests {
+		if requests[i].ID == id {
+			request = &requests[i]
+			break
+		}
+	}
+	if request == nil {
+		http.Error(w, "Request not found", http.StatusNotFound)
+		return
+	}
+
+	if request.Status != "Pending" {
+		http.Error(w, "Request already processed", http.StatusBadRequest)
+		return
+	}
+	request.Status = "Completed"
+
+	bc := blockchain.Blockchain{}
+	if err := bc.LoadBlock(); err != nil {
+		http.Error(w, fmt.Sprintf("Error loading blockchain: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Add request to blockchain
+	data := fmt.Sprintf("Request ID: %d, UserID: %s, Status: %s", request.ID, request.UserId, request.Status)
+	if hash := bc.AddBlock(data); hash == "" {
+		http.Error(w, "Failed to add block to blockchain", http.StatusInternalServerError)
+		return
+	}
+
+	if err := bc.SaveBlock(); err != nil {
+		http.Error(w, "Failed to save blockchain", http.StatusInternalServerError)
+		return
+	}
+
+	if err := database.SaveRequest(); err != nil {
+		http.Error(w, "Failed to save requests", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "Request processed successfully")
 }
 
-//function that allow the staff to view the requested collections
+// ViewRequestHandler allows staff to view requested collections
 func ViewRequestHandler(w http.ResponseWriter, r *http.Request) {
+	muSync.Lock()
+	defer muSync.Unlock()
 
+	temp := template.Must(template.ParseFiles("templates/view-requests.html"))
+	if err := temp.Execute(w, requests); err != nil {
+		log.Fatalln("Internal server error:", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
