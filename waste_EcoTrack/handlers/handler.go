@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -15,10 +14,10 @@ import (
 )
 
 var (
-	requests  []database.Request
+	muSync    sync.Mutex
 	residents []database.Resident
-	//resident  database.Resident
-	muSync sync.Mutex
+	staffs    []database.Staff
+	requests  []database.Request
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,15 +38,47 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-
-	temp := template.Must(template.ParseFiles(templateName))
-	if err := temp.Execute(w, nil); err != nil {
-		log.Println("Internal server error:", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	if r.URL.Path == "/resident-dashboard" {
+		temp := template.Must(template.ParseFiles("templates/resident-dashboard.html"))
+		e := temp.Execute(w, nil)
+		if e != nil {
+			log.Fatalln("Internal server error")
+			fmt.Fprint(w, "oops something went wrong")
+		}
+		return
+	}
+	if r.URL.Path == "/resident-register" {
+		temp := template.Must(template.ParseFiles("templates/resident-login.html"))
+		e := temp.Execute(w, nil)
+		if e != nil {
+			log.Fatalln("Internal server error")
+			fmt.Fprint(w, "oops something went wrong")
+		}
+		return
+	}
+	if r.URL.Path == "/resident-login" {
+		temp := template.Must(template.ParseFiles("templates/resident-login.html"))
+		e := temp.Execute(w, nil)
+		if e != nil {
+			log.Fatalln("Internal server error")
+			fmt.Fprint(w, "oops something went wrong")
+		}
+		return
+	}
+	if r.URL.Path == "/Company-Dashboard" {
+		temp := template.Must(template.ParseFiles("templates/staff-dashboard.html"))
+		e := temp.Execute(w, nil)
+		if e != nil {
+			log.Fatalln("Internal server error")
+			fmt.Fprint(w, "oops something went wrong")
+		}
+		return
+	} else {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
 
-// ResidentresidentHandler allows residents to resident to the system
+//function to allow the residents to register to the system
 func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		name := r.FormValue("name")
@@ -55,7 +86,7 @@ func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		location := r.FormValue("location")
 		userID := r.FormValue("user_id")
 		password := database.CreateHash(r.FormValue("password"))
-	
+
 		// Create new resident
 		resident := database.Resident{
 			Name:     name,
@@ -63,13 +94,6 @@ func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
 			UserId:   userID,
 			Location: location,
 			Password: password,
-		}
-		
-		// Load existing residents
-		var residents []database.Resident
-		data, err := os.ReadFile(database.FileName)
-		if err == nil {
-			json.Unmarshal(data, &residents)
 		}
 
 		// Check if user already exists
@@ -93,42 +117,38 @@ func ResidentRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/resident-login", http.StatusSeeOther)
 	} else if r.Method == http.MethodGet {
 		// Render the registration form
-		http.ServeFile(w, r, "templates/resident-register.html")
+		http.ServeFile(w, r, "templates/resident-login.html")
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
 
-// ResidentLoginHandler enables residents to login to the system
+//function that enable the residents to Login to the system
 func ResidentLoginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		userId := r.FormValue("user_id") // Changed from phone to user_id
-		password := database.CreateHash(r.FormValue("password"))
+	if r.Method == http.MethodGet {
+		temp := template.Must(template.ParseFiles("templates/resident-login.html"))
+		temp.Execute(w, nil)
+		return
+	}
+	muSync.Lock()
+	defer muSync.Unlock()
 
-		// Load existing residents
-		var residents []database.Resident
-		data, err := os.ReadFile(database.FileName)
-		if err != nil {
-			http.Error(w, "Failed to load residents", http.StatusInternalServerError)
+	userId := r.FormValue("user_id")
+	password := database.CreateHash(r.FormValue("password"))
+
+	// Authenticate resident
+	for _, resident := range residents {
+		if resident.UserId == userId && resident.Password == password {
+			http.Redirect(w, r, "/resident-dashboard", http.StatusSeeOther)
 			return
 		}
-		json.Unmarshal(data, &residents)
-
-		// Authenticate resident
-		for _, resident := range residents {
-			if resident.UserId == userId && resident.Password == password {
-				http.Redirect(w, r, "/resident-dashboard", http.StatusSeeOther)
-				return
-			}
-		}
-
-		http.Error(w, "Invalid user ID or password", http.StatusUnauthorized)
-	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+
+	http.Error(w, "Invalid user ID or password", http.StatusUnauthorized)
+
 }
 
-// StaffRegistrationHandler allows staff of the company to resident to the system
+//function that allow the staffs of the company to register to the system
 func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		name := r.FormValue("name")
@@ -141,13 +161,6 @@ func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			Phone:    phone,
 			Location: location,
 			Password: password,
-		}
-
-		// Load existing staff
-		var staffs []database.Staff
-		data, err := os.ReadFile(database.StaffFile)
-		if err == nil {
-			json.Unmarshal(data, &staffs)
 		}
 
 		// Add new staff
@@ -165,20 +178,11 @@ func StaffRegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// StaffLoginHandler enables staff to login to the system
+//functionthat enable the staffs to login to the system
 func StaffLoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		phone := r.FormValue("phone")
 		password := database.CreateHash(r.FormValue("password"))
-
-		// Load existing staff
-		var staffs []database.Staff
-		data, err := os.ReadFile(database.StaffFile)
-		if err != nil {
-			http.Error(w, "Failed to load staff", http.StatusInternalServerError)
-			return
-		}
-		json.Unmarshal(data, &staffs)
 
 		// Authenticate staff
 		for _, staff := range staffs {
@@ -188,13 +192,14 @@ func StaffLoginHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
+		//
+		fmt.Fprint(w, "INVALID USER PASSWORDOR ID")
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
 
-// ResidentRequestHandler allows residents to make collection requests
+//function that allow the resident to make collection requests
 func ResidentRequestHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		userId := r.FormValue("user_id")
@@ -225,7 +230,7 @@ func ResidentRequestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// StaffProcessRequestHandler allows staff to process requests made by residents
+//function that allows thestaff to process the request made by the residents
 func StaffProcessRequestHandler(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	if idStr == "" {
