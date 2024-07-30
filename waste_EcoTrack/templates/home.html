@@ -1,175 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Waste Management Home Page</title>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f8f0; /* Light green background for the page */
-        }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f8f0; /* Light green background for the page */
+      }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
+      body {
+        display: flex;
+        flex-direction: column;
+      }
 
-        .nav-bar {
-            background-color: #004d00; /* Dark green background for the nav bar */
-            color: #ffffff;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+      .nav-bar {
+        background-color: #004d00; /* Dark green background for the nav bar */
+        color: #ffffff;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-        .nav-bar .logo {
-            display: flex;
-            align-items: center;
-        }
+      .nav-bar .logo {
+        display: flex;
+        align-items: center;
+      }
 
-        .nav-bar .logo img {
-            height: 40px;
-            margin-right: 10px;
-        }
+      .nav-bar .logo img {
+        height: 40px;
+        margin-right: 10px;
+      }
 
-        .nav-bar ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
+      .nav-bar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
 
-        .nav-bar li {
-            margin: 0 15px;
-        }
+      .nav-bar li {
+        margin: 0 15px;
+      }
 
-        .nav-bar a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 1em;
-        }
+      .nav-bar a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1em;
+      }
 
-        .nav-bar a:hover {
-            text-decoration: underline;
-        }
+      .nav-bar a:hover {
+        text-decoration: underline;
+      }
 
-        .main-content {
-            flex: 1; /* Allows the content area to expand and push the footer to the bottom */
-            display: flex;
-            padding: 20px;
-        }
+      .main-content {
+        flex: 1; /* Allows the content area to expand and push the footer to the bottom */
+        display: flex;
+        padding: 20px;
+      }
 
-        .description {
-            flex: 1;
-            background-color: #ffffff; /* White background for content blocks */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
-            margin-right: 20px;
-        }
+      .description {
+        flex: 1;
+        background-color: #ffffff; /* White background for content blocks */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
+        margin-right: 20px;
+      }
 
-        .carousel {
-            flex: 1;
-            position: relative;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
-            overflow: hidden;
-        }
+      .carousel {
+        flex: 1;
+        position: relative;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a card effect */
+        overflow: hidden;
+      }
 
-        .carousel img {
-            width: 100%;
-            display: none;
-        }
+      .carousel img {
+        width: 100%;
+        display: none;
+      }
 
-        .carousel img.active {
-            display: block;
-        }
+      .carousel img.active {
+        display: block;
+      }
 
-        .carousel .controls {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
+      .carousel .controls {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+      }
 
-        .carousel .controls button {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #ffffff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
+      .carousel .controls button {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
 
-        .footer {
-            padding: 15px;
-            background-color: #003d00; /* Even darker green for footer */
-            color: #ffffff;
-            text-align: center;
-        }
+      .footer {
+        padding: 15px;
+        background-color: #003d00; /* Even darker green for footer */
+        color: #ffffff;
+        text-align: center;
+        align-self: baseline;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="nav-bar">
-        <div class="logo">
-            <static/img src="wasteecotracklogo.png" alt="Logo">
-            <span>Waste Management</span>
-        </div>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#login-register" onclick="toggleForms('signup')">Login/Register</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="#contact">Contact Us</a></li>
-        </ul>
+      <div class="logo">
+        <static/img src="wasteecotracklogo.png" alt="Logo">
+        <span>Waste Management</span>
+      </div>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li>
+          <a href="#login-register" onclick="toggleForms('signup')"
+            >Login/Register</a
+          >
+        </li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
     </nav>
 
     <div class="main-content">
-        <div class="description">
-            <h2>About Waste Management</h2>
-            <p>Our mission is to provide sustainable waste management solutions. We strive to reduce waste, recycle materials, and manage waste in an environmentally friendly manner. Join us in our efforts to protect the environment and create a cleaner, healthier planet for future generations.</p>
-        </div>
+      <div class="description">
+        <h2>About Waste Management</h2>
+        <p>
+          Our mission is to provide sustainable waste management solutions. We
+          strive to reduce waste, recycle materials, and manage waste in an
+          environmentally friendly manner. Join us in our efforts to protect the
+          environment and create a cleaner, healthier planet for future
+          generations.
+        </p>
+      </div>
 
-        <div class="carousel">
-            <img src="image1.jpg" alt="Image 1" class="active">
-            <img src="image2.jpg" alt="Image 2">
-            <img src="image3.jpg" alt="Image 3">
-            <div class="controls">
-                <button onclick="prevSlide()">&#10094;</button>
-                <button onclick="nextSlide()">&#10095;</button>
-            </div>
+      <div class="carousel">
+        <img src="image1.jpg" alt="Image 1" class="active" />
+        <img src="image2.jpg" alt="Image 2" />
+        <img src="image3.jpg" alt="Image 3" />
+        <div class="controls">
+          <button onclick="prevSlide()">&#10094;</button>
+          <button onclick="nextSlide()">&#10095;</button>
         </div>
+      </div>
     </div>
 
     <footer class="footer">
-        &copy; 2024 Waste Management Company. All rights reserved.
+      &copy; 2024 Waste Management Company. All rights reserved.
     </footer>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel img');
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".carousel img");
 
-        function showSlide(index) {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (index + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
+      function showSlide(index) {
+        slides[currentSlide].classList.remove("active");
+        currentSlide = (index + slides.length) % slides.length;
+        slides[currentSlide].classList.add("active");
+      }
 
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
+      function nextSlide() {
+        showSlide(currentSlide + 1);
+      }
 
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
+      function prevSlide() {
+        showSlide(currentSlide - 1);
+      }
 
-        // Automatically move to the next slide every 5 seconds
-        setInterval(nextSlide, 5000);
+      // Automatically move to the next slide every 5 seconds
+      setInterval(nextSlide, 5000);
     </script>
-</body>
+  </body>
 </html>
