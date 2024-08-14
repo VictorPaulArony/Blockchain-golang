@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// struct Transaction to hold the transaction enetities
 type Transaction struct {
 	Sender    string
 	Receiver  string
@@ -15,22 +16,27 @@ type Transaction struct {
 	TimeStamp string
 }
 
+// struct to hold the Blocks entities
 type Block struct {
 	ID           int
 	Transactions []Transaction
-	PrevHash     string
 	TimeStamp    string
+	PrevHash     string
 	Hash         string
 }
+
+// struct to hold the blocks in the blockchain
 type Blockchain struct {
 	Blocks []Block
 }
 
-// function to creat the hashing function
-func (bc *Block) CreateHash() string {
-	res := strconv.Itoa(bc.ID) + bc.TimeStamp + bc.PrevHash
-	for _, tr := range bc.Transactions {
-		res += tr.Sender + tr.Receiver + fmt.Sprintf("%f", tr.Amount) + tr.TimeStamp
+var transaction []Transaction
+
+// function to create the hash functionality for the blocks
+func (b *Block) CreateHash() string {
+	res := strconv.Itoa(b.ID) + b.PrevHash + b.TimeStamp + b.Hash
+	for _, tx := range b.Transactions {
+		res += tx.Sender + tx.Receiver + tx.TimeStamp + fmt.Sprintf("%f", tx.Amount)
 	}
 	h := sha256.New()
 	h.Write([]byte(res))
@@ -38,62 +44,67 @@ func (bc *Block) CreateHash() string {
 	return hex.EncodeToString(hashed)
 }
 
-// function to create a new block for the blockchain
-func NewBlock(id int, transaction []Transaction, prevHash string) Block {
-	newBlock := Block{
-		ID:           id,
-		Transactions: transaction,
-		PrevHash:     prevHash,
-		TimeStamp:    time.Now().String(),
-		Hash:         "",
-	}
-
-	newBlock.Hash = newBlock.CreateHash()
-	return newBlock
-}
-
-// function to create a new block the genesis blockchain
+// function to create the genesis block of the blockchain
 func CreateGenesis() *Block {
-	var transaction []Transaction
-	genesis := &Block{0, transaction, "", time.Now().String(), " "}
+	genesis := &Block{0, transaction, time.Now().String(), "", " "}
+
 	genesis.Hash = genesis.CreateHash()
 	return genesis
 }
 
-// method function to initialixe a new blockchain
-func NewBlockchain() *Blockchain {
-	genesisBlock := CreateGenesis()
-	return &Blockchain{[]Block{*genesisBlock}}
+// function to create new block
+func NewBlock(id int, transaction []Transaction, prevHash string) Block {
+	newBlock := Block{
+		ID:           id,
+		Transactions: transaction,
+		TimeStamp:    time.Now().String(),
+		PrevHash:     prevHash,
+		Hash:         "",
+	}
+	newBlock.Hash = newBlock.CreateHash()
+	return newBlock
 }
 
-// function and a method to add a new block to blockchain
+// Function to create the first block to the blockchain
+func NewBlockchain() Blockchain {
+	blockchain := CreateGenesis()
+	return Blockchain{[]Block{*blockchain}}
+}
+
+// function to add a new bolck to the blockchain
 func (bc *Blockchain) AddBlock(transaction []Transaction) {
 	prevBlock := bc.Blocks[len(bc.Blocks)-1]
 	newBlock := NewBlock(prevBlock.ID+1, transaction, prevBlock.Hash)
+
 	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
+// Function main to handle the commputation of the transaction
 func main() {
 	blockchain := NewBlockchain()
 
-	// Add a new block with transactions
-	transactions := []Transaction{
+	transaction := []Transaction{
+		{
+			Sender:    "paul",
+			Amount:    30,
+			Receiver:  "smally",
+			TimeStamp: time.Now().String(),
+		},
 		{Sender: "Alice", Receiver: "Bob", Amount: 10, TimeStamp: time.Now().String()},
 		{Sender: "Bob", Receiver: "Charlie", Amount: 5, TimeStamp: time.Now().String()},
 	}
 
-	blockchain.AddBlock(transactions)
+	blockchain.AddBlock(transaction)
 
-	// Print the blockchain
 	for _, block := range blockchain.Blocks {
-		fmt.Printf("Index: %d\n", block.ID)
-		fmt.Printf("TimeStamp: %s\n", block.TimeStamp)
-		fmt.Printf("Previous Hash: %s\n", block.PrevHash)
+		fmt.Printf("ID:  %d \n", block.ID)
+		fmt.Printf("TimeStamp: %s \n", block.TimeStamp)
+		fmt.Printf("Previous hash:  %s\n", block.PrevHash)
 		fmt.Printf("Hash: %s\n", block.Hash)
-		fmt.Printf("Transactions:\n")
+		fmt.Printf("The Transactions: \n")
+
 		for _, tx := range block.Transactions {
-			fmt.Printf("  %s -> %s: %f\n", tx.Sender, tx.Receiver, tx.Amount)
+			fmt.Printf("%s --> %f --> %s \n", tx.Sender, tx.Amount, tx.Receiver)
 		}
-		fmt.Println()
 	}
 }
