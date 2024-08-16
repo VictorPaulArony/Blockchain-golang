@@ -46,7 +46,7 @@ var transaction []Transaction
 
 // function to create a hash function for the blockchain
 func (b *Block) CreateHash() string {
-	res := strconv.Itoa(b.ID) + b.TimeStamp + b.PrevHash + b.Hash
+	res := strconv.Itoa(b.ID) + b.TimeStamp + b.PrevHash
 
 	for _, tx := range b.Transaction {
 		res += tx.Receiver + tx.Sender + tx.TimeStamp + fmt.Sprintf("%f", tx.Amount)
@@ -171,6 +171,8 @@ func (w *Wallet) VerifyTransaction(tx *Transaction) bool {
 	return ecdsa.Verify(&addr.PrivateKey.PublicKey, hash[:], &r, &s)
 }
 
+var transactions []Transaction
+
 // function to use for transfaring the funds between the address
 func (w *Wallet) Transfer(from, to string, amount float64) error {
 	// var transaction []Transaction
@@ -195,16 +197,59 @@ func (w *Wallet) Transfer(from, to string, amount float64) error {
 		TimeStamp: time.Now().String(),
 	}
 
+	err := w.SignTransaction(&transaction)
+	if err != nil {
+		log.Fatalln()
+	}
+
 	if !w.VerifyTransaction(&transaction) {
 		log.Fatalln("INVALID TRANSACTION")
 	}
 
-	err := w.SignTransaction(&transaction)
-	if err != nil{
-		log.Fatalln()
-	}
 	addrfrom.Balance -= amount
 	addrTo.Balance += amount
 
+	transactions = append(transactions, transaction)
 	return nil
+}
+
+// main function to run the project
+func main() {
+	wallet := NewWallet()
+
+	blockchain := NewBlockchain()
+
+	address1 := wallet.CreateAddress()
+	address2 := wallet.CreateAddress()
+
+	fmt.Printf("Address 1: %s\n", address1)
+	fmt.Printf("Address 2: %s\n", address2)
+
+	wallet.Addresses[address1].Balance = 100
+
+	fmt.Printf("Initial Balance of Address 1: %.2f\n", wallet.Addresses[address1].Balance)
+	fmt.Printf("Initial Balance of Address 2: %.2f\n", wallet.Addresses[address2].Balance)
+
+	err := wallet.Transfer(address1, address2, 50)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	blockchain.AddBlock(transaction)
+
+	fmt.Printf("Balance of Address 1 after transfer: %.2f\n", wallet.Addresses[address1].Balance)
+	fmt.Printf("Balance of Address 2 after transfer: %.2f\n", wallet.Addresses[address2].Balance)
+
+	// Print the blockchain
+	for _, block := range blockchain.Blocks {
+		fmt.Printf("Block ID: %d\n", block.ID)
+		fmt.Printf("Timestamp: %s\n", block.TimeStamp)
+		fmt.Printf("Previous Hash: %s\n", block.PrevHash)
+		fmt.Printf("Hash: %s\n", block.Hash)
+		fmt.Printf("Transactions:\n")
+		for _, tx := range block.Transaction {
+			fmt.Printf("  %s -> %s: %f\n", tx.Sender, tx.Receiver, tx.Amount)
+		}
+		fmt.Println()
+	}
 }
