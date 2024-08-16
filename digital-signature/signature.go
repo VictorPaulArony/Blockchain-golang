@@ -132,7 +132,7 @@ func (w *Wallet) SignTransaction(tx *Transaction) error {
 		log.Fatalln(tx.Sender)
 	}
 
-	hash := sha256.Sum256([]byte(tx.Receiver + fmt.Sprintf("%f", tx.Amount) + tx.Sender + tx.TimeStamp))
+	hash := sha256.Sum256([]byte(tx.Receiver + tx.Sender + tx.TimeStamp + fmt.Sprintf("%f", tx.Amount)))
 	r, s, err := ecdsa.Sign(rand.Reader, addr.PrivateKey, hash[:])
 	if err != nil {
 		log.Fatalln(err)
