@@ -1,69 +1,92 @@
 package main
 
 import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"strconv"
-	"time"
+	"log"
 )
 
-type Blockchain struct {
-	blocks []Block 
-}
-type Block struct {
-	ID        int    `json:"id"`
-	Data      string `json:"data"`
-	PrevHash  string `json:"prevHash"`
-	Timestamp string `json:"timeStamp"`
-	Hash      string `json:"hash"`
+type Address struct {
+	PublicKey  *ecdsa.PublicKey
+	PrivateKey *ecdsa.PrivateKey
+	Balance    float64
 }
 
-// function to create a new hash for the blocks
-func (b *Block) CreateHash() string {
-	res := strconv.Itoa(b.ID) + b.Data + b.PrevHash + b.Timestamp + b.Hash
-	h := sha256.New()
-	h.Write([]byte(res))
-	hashed := h.Sum(nil)
-
-	return hex.EncodeToString(hashed)
+type Wallet struct {
+	Addresses map[string]*Address
 }
 
-// function  to create a new block to add to the or for the blockchain
-func (bc *Blockchain) AddBlock(data string) {
-	prevBlock := bc.blocks[len(bc.blocks)-1]
-	newBlock := Block{
-		ID:        prevBlock.ID + 1,
-		Data:      data,
-		PrevHash:  prevBlock.Hash,
-		Timestamp: time.Now().String(),
+// function to create new wallet for the addresses
+func CreateWallet() Wallet {
+	return Wallet{Addresses: make(map[string]*Address)}
+}
+
+// function to create the address public and private key(s)
+func (w *Wallet) CreateAddress() string {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		log.Fatalln("ERROR WHILE GENERATING PUBLICKEY", err)
 	}
-	newBlock.Hash = newBlock.CreateHash()
-	bc.blocks = append(bc.blocks, newBlock)
+	publicKey := privateKey.PublicKey
+	pubblicKeyByte := append(publicKey.X.Bytes(), publicKey.Y.Bytes()...)
+	addr := sha256.Sum256([]byte(pubblicKeyByte))
+	addrStr := hex.EncodeToString(addr[:])
+
+	w.Addresses[addrStr] = &Address{
+		PrivateKey: privateKey,
+		PublicKey:  &publicKey,
+		Balance:    0.0,
+	}
+
+	return addrStr
 }
 
-// function to create the genesis block of the blockchain
-func CreateGenesis() Block {
-	genesis := Block{ID: 0, Data: "genesis Block", Timestamp: time.Now().String(), PrevHash: ""}
-	genesis.Hash = genesis.CreateHash()
-	return genesis
+// function to allow transfer of funds between addresses
+func (w *Wallet) Transfer(from string, to string, amount float64) error {
+	addrTo, exist := w.Addresses[to]
+	if !exist {
+		log.Fatalln(addrTo)
+	}
+
+	addrFrom, exist := w.Addresses[from]
+	if !exist {
+		log.Fatalln(addrFrom)
+	}
+
+	addrFrom.Balance -= amount
+	addrTo.Balance += amount
+
+	return nil
 }
 
-// function main that displays the blocks
+// function main to handle all the function as one
 func main() {
-	genesis := CreateGenesis()
+	wallet := CreateWallet()
 
-	blockchain := Blockchain{[]Block{genesis}}
+	addr1 := wallet.CreateAddress()
+	addr2 := wallet.CreateAddress()
 
-	blockchain.AddBlock("First Block")
-	blockchain.AddBlock("second Block")
-	blockchain.AddBlock("Third Block")
+	wallet.Addresses[addr1].Balance = 120.0
+	wallet.Addresses[addr2].Balance = 100.0
 
-	for _, blocks := range blockchain.blocks {
-		fmt.Printf("%d\n", blocks.ID)
-		fmt.Printf("%s\n", blocks.Data)
-		fmt.Printf("%s\n", blocks.PrevHash)
-		fmt.Printf("%s\n", blocks.Timestamp)
-		fmt.Printf("%s\n", blocks.Hash)
+	fmt.Printf("Address one: %s\n", addr1)
+	fmt.Printf("Address two: %s\n", addr2)
+	fmt.Println()
+
+
+	fmt.Printf("Initial Balance in Address One: %f\n", wallet.Addresses[addr1].Balance)
+	fmt.Printf("Initial Balance in Address two: %f\n", wallet.Addresses[addr2].Balance)
+	fmt.Println()
+
+	err := wallet.Transfer(addr1, addr2, 25)
+	if err != nil {
+		log.Fatalln(err)
 	}
+
+	fmt.Printf("Current Balance in Address One: %f\n", wallet.Addresses[addr1].Balance)
+	fmt.Printf("Current Balance in Address two: %f\n", wallet.Addresses[addr2].Balance)
 }
