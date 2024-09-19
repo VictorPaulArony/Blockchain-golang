@@ -4,96 +4,88 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"strconv"
+	"sync"
 	"time"
 )
 
+// Block structure
 type Block struct {
-	ID        int
+	Index     int
+	Timestamp string
 	Data      string
-	TimeStamp string
 	PrevHash  string
 	Hash      string
 	Nonce     int
 }
 
+// Blockchain structure
 type Blockchain struct {
-	blocks []Block
+	blocks []*Block
+	mu     sync.Mutex
 }
 
-// function to create the hash function for the block
-func (b *Block) CreatHash() string {
-	res := strconv.Itoa(b.ID) + b.Data + b.TimeStamp + b.PrevHash + b.Hash + strconv.Itoa(b.Nonce)
-	hash := sha256.New()
-	hash.Write([]byte(res))
-	hashed := hash.Sum(nil)
-
-	return hex.EncodeToString(hashed)
-}
-
-// function to create a method to add a new block to the blockchain
-func (bc *Blockchain) NewBlock(data string, diff int) {
-	prevHash := bc.blocks[len(bc.blocks)-1]
-	newBlock := Block{
-		ID:        prevHash.ID + 1,
+// Create a new block
+func NewBlock(index int, data string, prevHash string, nonce int) *Block {
+	block := &Block{
+		Index:     index,
+		Timestamp: time.Now().String(),
 		Data:      data,
-		TimeStamp: time.Now().String(),
-		PrevHash:  prevHash.Hash,
-		Nonce:     0,
+		PrevHash:  prevHash,
+		Nonce:     nonce,
 	}
+	block.Hash = block.calculateHash()
+	return block
+}
 
-	for {
-		newBlock.Hash = newBlock.CreatHash()
-		if IsValidHash(newBlock.Hash, diff) {
-			break
-		}
+// Calculate the block's hash
+func (b *Block) calculateHash() string {
+	record := fmt.Sprintf("%d%s%s%s%d", b.Index, b.Timestamp, b.Data, b.PrevHash, b.Nonce)
+	hash := sha256.New()
+	hash.Write([]byte(record))
+	return hex.EncodeToString(hash.Sum(nil))
+}
+
+// Create a new blockchain
+func NewBlockchain() *Blockchain {
+	return &Blockchain{blocks: []*Block{NewBlock(0, "Genesis Block", "", 0)}}
+}
+
+// Add a block to the blockchain
+func (bc *Blockchain) AddBlock(data string) {
+	bc.mu.Lock()
+	defer bc.mu.Unlock()
+
+	lastBlock := bc.blocks[len(bc.blocks)-1]
+	newBlock := NewBlock(lastBlock.Index+1, data, lastBlock.Hash, 0)
+
+	// Simple proof of work
+	for !isValidHash(newBlock.Hash) {
 		newBlock.Nonce++
-
+		newBlock.Hash = newBlock.calculateHash()
 	}
 
 	bc.blocks = append(bc.blocks, newBlock)
 }
 
-// function to create the genesis block of the blockchain
-func (bc *Blockchain) CreateGenesis() Block {
-	genesis := Block{ID: 0, Data: "Genesis Block", TimeStamp: time.Now().String(), PrevHash: "", Nonce: 0}
-	genesis.Hash = genesis.CreatHash()
-	return genesis
-}
-
-// function to create blockchain and add the genesis block to the blockchain
-func NewBlockchain() Blockchain {
-	bc := Blockchain{}
-	genesis := bc.CreateGenesis()
-	bc.blocks = append(bc.blocks, genesis)
-	return bc
-}
-
-// function to verify the hash if it meets the difficulity
-func IsValidHash(hash string, diff int) bool {
-	prefix := ""
-	for i := 0; i < diff; i++ {
-		prefix += "0"
-	}
-	return hash[:diff] == prefix
+// Check if the hash is valid (e.g., starts with 0000)
+func isValidHash(hash string) bool {
+	return hash[:5] == "00000"
 }
 
 func main() {
-	difficulty := 7 // Number of leading zeros required in the hash
 	blockchain := NewBlockchain()
 
-    prevBlockHash := blockchain.blocks[len(blockchain.blocks)-1].Hash
-	
+	// Add blocks
+	blockchain.AddBlock("First block after Genesis")
+	blockchain.AddBlock("Second block after Genesis")
 
-	fmt.Println("Mining...")
-	blockchain.NewBlock("Transaction Data 1", difficulty)
-	fmt.Printf("New Block Mined: %s\n",prevBlockHash )
-
-	blockchain.NewBlock("Transaction Data 2", difficulty)
-	fmt.Printf("New Block Mined: %s\n", prevBlockHash)
-
-	for _, blk := range blockchain.blocks {
-		fmt.Printf("Timestamp: %s\nData: %s\nPrevHash: %s\nHash: %s\nNonce: %d\n\n",
-			blk.TimeStamp, blk.Data, blk.PrevHash, blk.Hash, blk.Nonce)
+	// Print the blockchain
+	for _, block := range blockchain.blocks {
+		fmt.Printf("Index: %d\n", block.Index)
+		fmt.Printf("Timestamp: %s\n", block.Timestamp)
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Previous Hash: %s\n", block.PrevHash)
+		fmt.Printf("Hash: %s\n", block.Hash)
+		fmt.Printf("Nonce: %d\n\n", block.Nonce)
 	}
 }
