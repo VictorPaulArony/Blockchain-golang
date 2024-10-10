@@ -2,90 +2,147 @@ package main
 
 import (
 	"crypto/sha256"
-	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"strconv"
 	"sync"
 	"time"
 )
 
-// Block structure
-type Block struct {
-	Index     int
-	Timestamp string
-	Data      string
-	PrevHash  string
-	Hash      string
-	Nonce     int
+// Claim represents an insurance claim
+type Claim struct {
+	ID          string `json:"id"`
+	PolicyID    string `json:"policy_id"`
+	ClaimAmount int    `json:"claim_amount"`
+	Status      string `json:"status"` 
+	Timestamp   string `json:"timestamp"`
 }
 
-// Blockchain structure
+// Block represents a single block in the blockchain
+type Block struct {
+	ID        int
+	Timestamp string
+	Claims    []Claim
+	PrevHash  string
+	Hash      string
+}
+
+// Blockchain represents the entire blockchain
 type Blockchain struct {
-	blocks []*Block
+	Blocks []Block
 	mu     sync.Mutex
 }
 
-// Create a new block
-func NewBlock(index int, data string, prevHash string, nonce int) *Block {
-	block := &Block{
-		Index:     index,
-		Timestamp: time.Now().String(),
-		Data:      data,
-		PrevHash:  prevHash,
-		Nonce:     nonce,
+// CalculateHash computes the hash for the block
+func (b *Block) CalculateHash() string {
+	data := strconv.Itoa(b.ID) + b.Timestamp + b.PrevHash
+	for _, claim := range b.Claims {
+		claimJSON, _ := json.Marshal(claim)
+		data += string(claimJSON)
 	}
-	block.Hash = block.calculateHash()
-	return block
+	hash := sha256.Sum256([]byte(data))
+	return fmt.Sprintf("%x", hash)
 }
 
-// Calculate the block's hash
-func (b *Block) calculateHash() string {
-	record := fmt.Sprintf("%d%s%s%s%d", b.Index, b.Timestamp, b.Data, b.PrevHash, b.Nonce)
-	hash := sha256.New()
-	hash.Write([]byte(record))
-	return hex.EncodeToString(hash.Sum(nil))
-}
-
-// Create a new blockchain
-func NewBlockchain() *Blockchain {
-	return &Blockchain{blocks: []*Block{NewBlock(0, "Genesis Block", "", 0)}}
-}
-
-// Add a block to the blockchain
-func (bc *Blockchain) AddBlock(data string) {
+// AddBlock creates a new block and adds it to the blockchain
+func (bc *Blockchain) AddBlock(claims []Claim) {
 	bc.mu.Lock()
 	defer bc.mu.Unlock()
 
-	lastBlock := bc.blocks[len(bc.blocks)-1]
-	newBlock := NewBlock(lastBlock.Index+1, data, lastBlock.Hash, 0)
-
-	// Simple proof of work
-	for !isValidHash(newBlock.Hash) {
-		newBlock.Nonce++
-		newBlock.Hash = newBlock.calculateHash()
+	var prevHash string
+	if len(bc.Blocks) > 0 {
+		prevHash = bc.Blocks[len(bc.Blocks)-1].Hash
 	}
 
-	bc.blocks = append(bc.blocks, newBlock)
+	newBlock := Block{
+		ID:        len(bc.Blocks) + 1,
+		Timestamp: time.Now().String(),
+		Claims:    claims,
+		PrevHash:  prevHash,
+	}
+
+	newBlock.Hash = newBlock.CalculateHash()
+	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
-// Check if the hash is valid (e.g., starts with 0000)
-func isValidHash(hash string) bool {
-	return hash[:5] == "00000"
+// RegisterClaim registers a new claim
+func (bc *Blockchain) RegisterClaim(policyID string, amount int) Claim {
+	claim := Claim{
+		ID:          strconv.Itoa(len(bc.Blocks) + 1),
+		PolicyID:    policyID,
+		ClaimAmount: amount,
+		Status:      "Pending",
+		Timestamp:   time.Now().String(),
+	}
+	return claim
+}
+
+// ApproveClaim approves a claim if conditions are met
+func (bc *Blockchain) ApproveClaim(claimID string) error {
+	for i := range bc.Blocks {
+		for j := range bc.Blocks[i].Claims {
+			if bc.Blocks[i].Claims[j].ID == claimID {
+				if bc.Blocks[i].Claims[j].Status != "Pending" {
+					return fmt.Errorf("claim is already processed: %s", bc.Blocks[i].Claims[j].Status)
+				}
+				bc.Blocks[i].Claims[j].Status = "Approved"
+				return nil
+			}
+		}
+	}
+	return fmt.Errorf("claim not found: %s", claimID)
+}
+
+// DenyClaim denies a claim
+func (bc *Blockchain) DenyClaim(claimID string) error {
+	for i := range bc.Blocks {
+		for j := range bc.Blocks[i].Claims {
+			if bc.Blocks[i].Claims[j].ID == claimID {
+				if bc.Blocks[i].Claims[j].Status != "Pending" {
+					return fmt.Errorf("claim is already processed: %s", bc.Blocks[i].Claims[j].Status)
+				}
+				bc.Blocks[i].Claims[j].Status = "Denied"
+				return nil
+			}
+		}
+	}
+	return fmt.Errorf("claim not found: %s", claimID)
+}
+
+// PrintBlockchain prints the entire blockchain
+func (bc *Blockchain) PrintBlockchain() {
+	for _, block := range bc.Blocks {
+		fmt.Printf("Block ID: %d\n", block.ID)
+		fmt.Printf("Timestamp: %s\n", block.Timestamp)
+		for _, claim := range block.Claims {
+			fmt.Printf("  Claim ID: %s, Policy ID: %s, Amount: %d, Status: %s\n", claim.ID, claim.PolicyID, claim.ClaimAmount, claim.Status)
+		}
+		fmt.Printf("  Previous Hash: %s\n", block.PrevHash)
+		fmt.Printf("  Hash: %s\n\n", block.Hash)
+	}
 }
 
 func main() {
-	blockchain := NewBlockchain()
+	blockchain := &Blockchain{}
 
-	// Add blocks
-	blockchain.AddBlock("First block after Genesis")
-	blockchain.AddBlock("Second block after Genesis")
+	// Register claims
+	claim1 := blockchain.RegisterClaim("policy_123", 1000)
+	claim2 := blockchain.RegisterClaim("policy_456", 2000)
+
+	// Add claims to the blockchain
+	blockchain.AddBlock([]Claim{claim1})
+	blockchain.AddBlock([]Claim{claim2})
+
+	// Approve a claim
+	if err := blockchain.ApproveClaim(claim1.ID); err != nil {
+		fmt.Println(err)
+	}
+
+	// Deny a claim
+	if err := blockchain.DenyClaim(claim2.ID); err != nil {
+		fmt.Println(err)
+	}
 
 	// Print the blockchain
-	for _, block := range blockchain.blocks {
-		fmt.Printf("Index: %d\n", block.Index)
-		fmt.Printf("Timestamp: %s\n", block.Timestamp)
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Previous Hash: %s\n", block.PrevHash)
-		fmt.Printf("Hash: %s\n", block.Hash)
-		fmt.Printf("Nonce: %d\n\n", block.Nonce)
-	}
+	blockchain.PrintBlockchain()
 }
