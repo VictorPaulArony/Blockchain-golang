@@ -4,81 +4,90 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"strconv"
-	"strings"
+	"sync"
 	"time"
 )
 
 type Block struct {
-	Index     int
-	TimeStamp string
+	ID        int
 	Data      string
+	TimeStamp string
 	PreHash   string
 	Hash      string
 	Nonce     int
 }
 
 type Blockchain struct {
-	block []Block
-	diff  int
+	Blocks []Block
+	mu     sync.Mutex
 }
 
-//var block = Block{}
-
-func Calc(block Block) string {
-	res := strconv.Itoa(block.Index) + block.TimeStamp + block.Data + block.PreHash + strconv.Itoa(block.Nonce)
-	h := sha256.New()
-	h.Write([]byte(res))
-	hashed := h.Sum(nil)
-	return hex.EncodeToString(hashed)
+// function to create the hashing function
+func (b *Block) CreateHash() string {
+	res := strconv.Itoa(b.ID) + b.Data + b.TimeStamp + b.PreHash + b.Hash
+	hash := sha256.Sum256([]byte(res))
+	return hex.EncodeToString(hash[:])
 }
 
-func (b *Block) MineBlock(diff int) {
-	target := strings.Repeat("0", diff)
-	for !strings.HasPrefix(b.Hash, target) {
-		b.Nonce++
-		b.Hash = Calc(*b)
-	}
-}
-
-func CreateGenesis() Block {
-	genesisBlock := Block{0, time.Now().String(), "First block", "", "", 0}
-	genesisBlock.Hash = Calc(genesisBlock)
-	genesisBlock.MineBlock(3)
-	return genesisBlock
-}
-
+// function to add a block for the blockchain
 func (bc *Blockchain) AddBlock(data string) {
-	prevBlock := bc.block[len(bc.block)-1]
-	block := Block{
-	Index: prevBlock.Index + 1,
-	TimeStamp: time.Now().String(),
-	Data: data,
-	PreHash: prevBlock.Hash,
+	bc.mu.Lock()
+	defer bc.mu.Unlock()
+
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
+	newBlock := Block{
+		ID:        prevBlock.ID + 1,
+		Data:      data,
+		TimeStamp: time.Now().String(),
+		PreHash:   prevBlock.Hash,
 	}
 
-	block.MineBlock(bc.diff)
-	bc.block = append(bc.block, block)
+	for {
+		newBlock.Hash = newBlock.CreateHash()
+		if IsValidHash(newBlock.Hash) {
+			break
+		}
+		newBlock.Nonce++
+	}
+
+	if bc.IsValidBlock(newBlock) {
+		bc.Blocks = append(bc.Blocks, newBlock)
+	} else {
+		log.Fatalln("Invalid Block")
+	}
 }
 
-func (bc *Blockchain) IsValid() bool {
-	for i := 1; i < len(bc.block); i++ {
-		prevBlock := bc.block[i-1]
-		currentBlock := bc.block[i]
-		if currentBlock.PreHash != prevBlock.Hash {
-			return false
-		}
-		if currentBlock.Hash != Calc(currentBlock) {
-			return false
-		}
+// function to verify the PoW
+func IsValidHash(hash string) bool {
+	return hash[:5] == "00000"
+}
 
+// function to create genesis block
+func GenesisBlock() Block {
+	genesis := Block{0, "Genesis Block", time.Now().String(), "", "", 0}
+	genesis.Hash = genesis.CreateHash()
+	return genesis
+}
+
+// function to create a new blockchain
+func CreateBlockchain() Blockchain {
+	genesis := GenesisBlock()
+	return Blockchain{Blocks: []Block{genesis}}
+}
+
+// function to verify the blocks
+func (bc *Blockchain) IsValidBlock(block Block) bool {
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
+	if len(bc.Blocks) == 0 {
+		return false
 	}
-	return true
+	return prevBlock.Hash == block.PreHash
 }
 
 func main() {
-	currentGenesis := CreateGenesis()
-	blockchain := Blockchain{[]Block{currentGenesis}, 3}
+	blockchain := CreateBlockchain()
 
 	blockchain.AddBlock("second block")
 	blockchain.AddBlock("third block")
@@ -87,8 +96,8 @@ func main() {
 	blockchain.AddBlock("sixth block")
 	blockchain.AddBlock("seventh block")
 
-	for _, block := range blockchain.block {
-		fmt.Printf("Index: %d\n", block.Index)
+	for _, block := range blockchain.Blocks {
+		fmt.Printf("Index: %d\n", block.ID)
 		fmt.Printf("Timestamp: %s\n", block.TimeStamp)
 		fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("PrevHash: %s\n", block.PreHash)
@@ -96,10 +105,4 @@ func main() {
 		fmt.Printf("Nonce: %d\n", block.Nonce)
 		fmt.Println()
 	}
-
-	isValid := blockchain.IsValid()
-	fmt.Printf("Is blockchain valid? %v\n", isValid)
-
-	
-
 }
