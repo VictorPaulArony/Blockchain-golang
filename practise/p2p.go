@@ -1,148 +1,93 @@
 package main
 
 import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"crypto/sha256"
-	"encoding/json"
+	"encoding/hex"
 	"fmt"
-	"strconv"
-	"sync"
-	"time"
+	"log"
 )
 
-// Claim represents an insurance claim
-type Claim struct {
-	ID          string `json:"id"`
-	PolicyID    string `json:"policy_id"`
-	ClaimAmount int    `json:"claim_amount"`
-	Status      string `json:"status"` 
-	Timestamp   string `json:"timestamp"`
+type Wallet struct {
+	Address map[string]*Adrress
 }
 
-// Block represents a single block in the blockchain
-type Block struct {
-	ID        int
-	Timestamp string
-	Claims    []Claim
-	PrevHash  string
-	Hash      string
+type Adrress struct {
+	PublicKey  *ecdsa.PublicKey
+	PrivateKey *ecdsa.PrivateKey
+	Balance    float64
 }
 
-// Blockchain represents the entire blockchain
-type Blockchain struct {
-	Blocks []Block
-	mu     sync.Mutex
+// function to create a wallet
+func CreateWallet() Wallet {
+	return Wallet{Address: make(map[string]*Adrress)}
 }
 
-// CalculateHash computes the hash for the block
-func (b *Block) CalculateHash() string {
-	data := strconv.Itoa(b.ID) + b.Timestamp + b.PrevHash
-	for _, claim := range b.Claims {
-		claimJSON, _ := json.Marshal(claim)
-		data += string(claimJSON)
-	}
-	hash := sha256.Sum256([]byte(data))
-	return fmt.Sprintf("%x", hash)
-}
-
-// AddBlock creates a new block and adds it to the blockchain
-func (bc *Blockchain) AddBlock(claims []Claim) {
-	bc.mu.Lock()
-	defer bc.mu.Unlock()
-
-	var prevHash string
-	if len(bc.Blocks) > 0 {
-		prevHash = bc.Blocks[len(bc.Blocks)-1].Hash
+// function to create the Address for the wallet
+func (w *Wallet) CreateAddress() string {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		log.Fatalln("Error Generating Key", err)
+		return ""
 	}
 
-	newBlock := Block{
-		ID:        len(bc.Blocks) + 1,
-		Timestamp: time.Now().String(),
-		Claims:    claims,
-		PrevHash:  prevHash,
-	}
+	publicKey := privateKey.PublicKey
+	publicKeyBytes := append(publicKey.X.Bytes(), publicKey.Y.Bytes()...)
+	add := sha256.Sum256(publicKeyBytes)
+	address := hex.EncodeToString(add[:])
 
-	newBlock.Hash = newBlock.CalculateHash()
-	bc.Blocks = append(bc.Blocks, newBlock)
+	w.Address[address] = &Adrress{
+		PublicKey:  &publicKey,
+		PrivateKey: privateKey,
+		Balance:    0,
+	}
+	return address
 }
 
-// RegisterClaim registers a new claim
-func (bc *Blockchain) RegisterClaim(policyID string, amount int) Claim {
-	claim := Claim{
-		ID:          strconv.Itoa(len(bc.Blocks) + 1),
-		PolicyID:    policyID,
-		ClaimAmount: amount,
-		Status:      "Pending",
-		Timestamp:   time.Now().String(),
+// function to create Transfer of funds
+func (w *Wallet) Transfer(from, to string, amount float64) {
+	sender, exist := w.Address[from]
+	if !exist {
+		log.Fatalln("The Address does not exist: ", exist)
 	}
-	return claim
+
+	reciever, exist := w.Address[to]
+	if !exist {
+		log.Fatalln("The Address does not exist: ", exist)
+	}
+
+	sender.Balance -= amount
+	reciever.Balance += amount
 }
 
-// ApproveClaim approves a claim if conditions are met
-func (bc *Blockchain) ApproveClaim(claimID string) error {
-	for i := range bc.Blocks {
-		for j := range bc.Blocks[i].Claims {
-			if bc.Blocks[i].Claims[j].ID == claimID {
-				if bc.Blocks[i].Claims[j].Status != "Pending" {
-					return fmt.Errorf("claim is already processed: %s", bc.Blocks[i].Claims[j].Status)
-				}
-				bc.Blocks[i].Claims[j].Status = "Approved"
-				return nil
-			}
-		}
-	}
-	return fmt.Errorf("claim not found: %s", claimID)
-}
-
-// DenyClaim denies a claim
-func (bc *Blockchain) DenyClaim(claimID string) error {
-	for i := range bc.Blocks {
-		for j := range bc.Blocks[i].Claims {
-			if bc.Blocks[i].Claims[j].ID == claimID {
-				if bc.Blocks[i].Claims[j].Status != "Pending" {
-					return fmt.Errorf("claim is already processed: %s", bc.Blocks[i].Claims[j].Status)
-				}
-				bc.Blocks[i].Claims[j].Status = "Denied"
-				return nil
-			}
-		}
-	}
-	return fmt.Errorf("claim not found: %s", claimID)
-}
-
-// PrintBlockchain prints the entire blockchain
-func (bc *Blockchain) PrintBlockchain() {
-	for _, block := range bc.Blocks {
-		fmt.Printf("Block ID: %d\n", block.ID)
-		fmt.Printf("Timestamp: %s\n", block.Timestamp)
-		for _, claim := range block.Claims {
-			fmt.Printf("  Claim ID: %s, Policy ID: %s, Amount: %d, Status: %s\n", claim.ID, claim.PolicyID, claim.ClaimAmount, claim.Status)
-		}
-		fmt.Printf("  Previous Hash: %s\n", block.PrevHash)
-		fmt.Printf("  Hash: %s\n\n", block.Hash)
+// function to get the balance of in the Address
+func (w *Wallet) GetBalance(address string) {
+	addstr, exist := w.Address[address]
+	if !exist {
+		log.Fatalln("The Address does not exist: ", addstr)
 	}
 }
 
-func main() {
-	blockchain := &Blockchain{}
+//function main 
+func main(){
+	wallet := CreateWallet()
 
-	// Register claims
-	claim1 := blockchain.RegisterClaim("policy_123", 1000)
-	claim2 := blockchain.RegisterClaim("policy_456", 2000)
 
-	// Add claims to the blockchain
-	blockchain.AddBlock([]Claim{claim1})
-	blockchain.AddBlock([]Claim{claim2})
+	address1 := wallet.CreateAddress()
+	address2 := wallet.CreateAddress()
 
-	// Approve a claim
-	if err := blockchain.ApproveClaim(claim1.ID); err != nil {
-		fmt.Println(err)
-	}
 
-	// Deny a claim
-	if err := blockchain.DenyClaim(claim2.ID); err != nil {
-		fmt.Println(err)
-	}
+	wallet.Address[address1].Balance = 120
+	wallet.Address[address2].Balance = 300
 
-	// Print the blockchain
-	blockchain.PrintBlockchain()
+	fmt.Printf("The Adress1 Initial Blance: %f\n", wallet.Address[address1].Balance)
+	fmt.Printf("The Address2 Initial Balance:  %f\n", wallet.Address[address2].Balance)
+
+	wallet.Transfer(address1, address2, 110.0)
+
+	fmt.Printf("Address 1 Balance: %f\n", wallet.Address[address1].Balance)
+	fmt.Printf("Address 2 Balance: %f\n",wallet.Address[address2].Balance)
+
 }
