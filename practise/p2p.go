@@ -1,93 +1,187 @@
 package main
 
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"log"
+	"math/rand"
+	"strconv"
+	"sync"
+	"time"
 )
 
-type Wallet struct {
-	Address map[string]*Adrress
+type Block struct {
+	ID          int
+	Transaction []Transaction
+	TimeStamp   string
+	MerkleRoot  string
+	PrevHash    string
+	Hash        string
+	Nonce       int
 }
 
-type Adrress struct {
-	PublicKey  *ecdsa.PublicKey
-	PrivateKey *ecdsa.PrivateKey
-	Balance    float64
+type Transaction struct {
+	Sender   string
+	Receiver string
+	Amount   float64
 }
 
-// function to create a wallet
-func CreateWallet() Wallet {
-	return Wallet{Address: make(map[string]*Adrress)}
+type Blockchain struct {
+	Blocks []Block
+	mu     sync.Mutex
 }
 
-// function to create the Address for the wallet
-func (w *Wallet) CreateAddress() string {
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		log.Fatalln("Error Generating Key", err)
+// Function to generate the a salt
+//(to prevent collision attack to the blocks during hashing)
+func Salt() (string, error) {
+	salt := make([]byte, 16)
+	if _, err := rand.Read(salt); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(salt), nil
+}
+
+// fuction to create do the hashing
+func Hash(data string, salt string) string {
+	hash := sha256.Sum256([]byte(data + salt))
+	return hex.EncodeToString(hash[:])
+}
+
+// function to hash the transaction block
+func (b *Block) HashBlock() string {
+	data := strconv.Itoa(b.ID) + b.TimeStamp + b.MerkleRoot + b.PrevHash + b.Hash + strconv.Itoa(b.Nonce)
+	for _, tx := range b.Transaction {
+		data += tx.Sender + tx.Receiver + strconv.Itoa(int(tx.Amount))
+	}
+	salt, _ := Salt()
+	return Hash(data, salt)
+}
+
+// function to create the genesis block of thwe blockchain
+func GenesisBlock() Block {
+	var transaction []Transaction
+	genesis := Block{
+		ID:          0,
+		Transaction: transaction,
+		TimeStamp:   time.Now().String(),
+		PrevHash:    "",
+	}
+	for {
+		genesis.Hash = genesis.HashBlock()
+		if IsValidHash(genesis.Hash) {
+			break
+		}
+		genesis.Nonce++
+	}
+	return genesis
+}
+
+// function to verify the nonce of the block (PoW)
+func IsValidHash(hash string) bool {
+	return hash[:5] == "00000"
+}
+
+// function to create a new blockchain
+func CreateBlockchain() Blockchain {
+	genesis := GenesisBlock()
+	return Blockchain{Blocks: []Block{genesis}}
+}
+
+// Function to verify the blocks before adding to the blockchain
+func (bc *Blockchain) IsValidBlock(block Block) bool {
+	if len(block.Hash) == 0 {
+		return false
+	}
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
+	if prevBlock.Hash == block.PrevHash {
+		return true
+	}
+	return false
+}
+
+// function to Add the block to the blockchain
+func (bc *Blockchain) AddBlock(transaction []Transaction) {
+	bc.mu.Lock()
+	defer bc.mu.Unlock()
+
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
+	newBlock := Block{
+		ID:          prevBlock.ID + 1,
+		Transaction: transaction,
+		TimeStamp:   time.Now().String(),
+		PrevHash:    prevBlock.Hash,
+	}
+
+	newBlock.MerkleRoot = CreateMerkelTree(transaction)
+	for {
+		newBlock.Hash = newBlock.HashBlock()
+		if IsValidHash(newBlock.Hash) {
+			break
+		}
+		newBlock.Nonce++
+	}
+
+	if !bc.IsValidBlock(newBlock) {
+		log.Fatalln("The Block is an Invalid Block")
+		return
+	}
+	bc.Blocks = append(bc.Blocks, newBlock)
+}
+
+// function to calculate the merkle root from a slice of transaction
+func CreateMerkelTree(transaction []Transaction) string {
+	var hashes []string
+
+	if len(transaction) == 0 {
 		return ""
 	}
-
-	publicKey := privateKey.PublicKey
-	publicKeyBytes := append(publicKey.X.Bytes(), publicKey.Y.Bytes()...)
-	add := sha256.Sum256(publicKeyBytes)
-	address := hex.EncodeToString(add[:])
-
-	w.Address[address] = &Adrress{
-		PublicKey:  &publicKey,
-		PrivateKey: privateKey,
-		Balance:    0,
+	salt, _ := Salt()
+	for _, tx := range transaction {
+		hashes = append(hashes, Hash(tx.Receiver+tx.Sender+strconv.Itoa(int(tx.Amount)), salt))
 	}
-	return address
+
+	for len(hashes) > 1 {
+		var newHash []string
+		for i := 0; i < len(hashes); i += 2 {
+			if i+1 < len(hashes) {
+				newHash = append(newHash, Hash(hashes[i]+hashes[i+1], salt))
+			} else {
+				newHash = append(newHash, hashes[i])
+			}
+		}
+		hashes = newHash
+	}
+
+	return hashes[0]
 }
 
-// function to create Transfer of funds
-func (w *Wallet) Transfer(from, to string, amount float64) {
-	sender, exist := w.Address[from]
-	if !exist {
-		log.Fatalln("The Address does not exist: ", exist)
-	}
-
-	reciever, exist := w.Address[to]
-	if !exist {
-		log.Fatalln("The Address does not exist: ", exist)
-	}
-
-	sender.Balance -= amount
-	reciever.Balance += amount
-}
-
-// function to get the balance of in the Address
-func (w *Wallet) GetBalance(address string) {
-	addstr, exist := w.Address[address]
-	if !exist {
-		log.Fatalln("The Address does not exist: ", addstr)
+// function to print the output on the terminal of the CLI
+func (bc *Blockchain) Display() {
+	for _, block := range bc.Blocks {
+		fmt.Printf("Block ID: %d\n", block.ID)
+		fmt.Printf("  MerkleRoot: %s\n", block.MerkleRoot)
+		fmt.Printf("  PrevHash: %s\n", block.PrevHash)
+		fmt.Printf("  Hash: %s\n", block.Hash)
+		fmt.Printf("  Nonce: %d\n", block.Nonce)
+		for _, tx := range block.Transaction {
+			fmt.Printf("Sender %s to Receiver %s amount %.f\n", tx.Receiver, tx.Sender, tx.Amount)
+		}
 	}
 }
 
-//function main 
-func main(){
-	wallet := CreateWallet()
+// function main to run the code on CLI mode
+func main() {
+	blockchain := CreateBlockchain()
 
-
-	address1 := wallet.CreateAddress()
-	address2 := wallet.CreateAddress()
-
-
-	wallet.Address[address1].Balance = 120
-	wallet.Address[address2].Balance = 300
-
-	fmt.Printf("The Adress1 Initial Blance: %f\n", wallet.Address[address1].Balance)
-	fmt.Printf("The Address2 Initial Balance:  %f\n", wallet.Address[address2].Balance)
-
-	wallet.Transfer(address1, address2, 110.0)
-
-	fmt.Printf("Address 1 Balance: %f\n", wallet.Address[address1].Balance)
-	fmt.Printf("Address 2 Balance: %f\n",wallet.Address[address2].Balance)
-
+	blockchain.AddBlock(
+		[]Transaction{
+			{
+				Sender:   "paul",
+				Receiver: "Smally",
+				Amount:   150.0,
+			},
+		},
+	)
+	blockchain.Display()
 }
