@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Wallet Generator</title>
+</head>
+<body>
+    <h1>Generate Blockchain Wallet</h1>
+    <button onclick="generateWallet()">Create Wallet</button>
+
+    <h3>Generated Wallet Details</h3>
+    <p><strong>Address:</strong> <span id="address"></span></p>
+    <p><strong>Private Key:</strong> <span id="privateKey"></span></p>
+
+    <script>
+        async function generateWallet() {
+            try {
+                const response = await fetch("http://localhost:8080/generate-wallet", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const data = await response.json();
+                document.getElementById("address").innerText = data.address;
+                document.getElementById("privateKey").innerText = data.privateKey;
+            } catch (error) {
+                console.error("Error generating wallet:", error);
+            }
+        }
+    </script>
+</body>
+</html>
