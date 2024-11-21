@@ -1,0 +1,23 @@
+{
+ "User": {
+  "username": "",
+  "email": "",
+  "phone": "",
+  "address": "",
+  "privatekey": ""
+ },
+ "smallypauls@gmail.com": {
+  "username": "smally",
+  "email": "smallypauls@gmail.com",
+  "phone": "0768744700",
+  "address": "0cb81487f1d315058df5d230f41c46d79310dd8ed04a3af00077281c6e95e8ad",
+  "privatekey": "b878962b1295edb1da98b94080a7a8094c542ec619eb0617d5f5c582e4189477"
+ },
+ "victorpaularony@gmail.com": {
+  "username": "victor paul",
+  "email": "victorpaularony@gmail.com",
+  "phone": "0768744700",
+  "address": "7fe0abf37c74279fa0a3c5a2be3b454bfb90042aa0372df6acaebd134124e9ce",
+  "privatekey": "47d7ea14287b635cada4d73d5d9ae4c888aa9c2bb2ac83890b56b9882b8ef1b0"
+ }
+}
