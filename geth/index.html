@@ -3,33 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blockchain Wallet Generator</title>
+    <title>User Registration</title>
 </head>
 <body>
-    <h1>Generate Blockchain Wallet</h1>
-    <button onclick="generateWallet()">Create Wallet</button>
-
-    <h3>Generated Wallet Details</h3>
-    <p><strong>Address:</strong> <span id="address"></span></p>
-    <p><strong>Private Key:</strong> <span id="privateKey"></span></p>
-
-    <script>
-        async function generateWallet() {
-            try {
-                const response = await fetch("http://localhost:8080/generate-wallet", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                const data = await response.json();
-                document.getElementById("address").innerText = data.address;
-                document.getElementById("privateKey").innerText = data.privateKey;
-            } catch (error) {
-                console.error("Error generating wallet:", error);
-            }
-        }
-    </script>
+    <h1>User Registration</h1>
+    <form action="/" method="POST">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="phone">Phone:</label><br>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        
+        <input type="submit" value="Register">
+    </form>
 </body>
 </html>
