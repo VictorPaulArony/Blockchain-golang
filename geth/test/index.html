@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Registration</title>
+</head>
+<body>
+    <h1>User Registration</h1>
+    <form action="/register" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone" required><br><br>
+        <input type="submit" value="Register">
+    </form>
+
+    <h1>Transaction</h1>
+    <form action="/transaction" method="post">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="type">Transaction Type:</label><br>
+        <select id="type" name="type" required>
+            <option value="deposit">Deposit</option>
+            <option value="withdrawal">Withdrawal</option>
+        </select><br><br>
+        <label for="amount">Amount:</label><br>
+        <input type="number" id="amount" name="amount" step="0.01" required><br><br>
+        <input type="submit" value="Submit Transaction">
+    </form>
+</body>
+</html>
