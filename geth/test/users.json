@@ -1,0 +1,74 @@
+{
+  "Users": {
+    "smallypauls@gmail.com": {
+      "username": "smally",
+      "email": "smallypauls@gmail.com",
+      "phone": "0759080909",
+      "address": "0df8717cdbe0fd97bd064001eeffce34132bef231aa23250a22f2613d8496ee6",
+      "privateKey": "2292143a811642665a4a32f3838c951c39ca79434759750295433fe974c44594",
+      "balance": 100,
+      "transactions": [
+        {
+          "type": "deposit",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:43:22+03:00"
+        },
+        {
+          "type": "withdrawal",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:43:39+03:00"
+        },
+        {
+          "type": "withdrawal",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:44:24+03:00"
+        },
+        {
+          "type": "deposit",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:44:36+03:00"
+        },
+        {
+          "type": "deposit",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:44:44+03:00"
+        },
+        {
+          "type": "withdrawal",
+          "amount": 1,
+          "timestamp": "2024-11-05T09:44:51+03:00"
+        },
+        {
+          "type": "deposit",
+          "amount": 50,
+          "timestamp": "2024-11-05T09:45:12+03:00"
+        },
+        {
+          "type": "withdrawal",
+          "amount": 50,
+          "timestamp": "2024-11-05T09:45:24+03:00"
+        }
+      ]
+    },
+    "victorpaularony@gmail.com": {
+      "username": "victor paul",
+      "email": "victorpaularony@gmail.com",
+      "phone": "0768744700",
+      "address": "97118754e24e5b7abaf2ac8006525d1a448023dfc688bfed7e3c801d3d48e744",
+      "privateKey": "adda2860b9a106dd9181475f11d5a06992b56a9167ac139a4a9f3290750aa192",
+      "balance": 100,
+      "transactions": [
+        {
+          "type": "withdrawal",
+          "amount": 50,
+          "timestamp": "2024-11-05T09:45:34+03:00"
+        },
+        {
+          "type": "deposit",
+          "amount": 50,
+          "timestamp": "2024-11-05T09:45:46+03:00"
+        }
+      ]
+    }
+  }
+}
