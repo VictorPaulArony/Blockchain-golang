@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome, {{.User.Name}}</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Your Details</h2>
+            <p><strong>Email:</strong> {{.User.Email}}</p>
+            <p><strong>Phone:</strong> {{.User.Phone}}</p>
+            <p><strong>Wallet Address:</strong> {{.User.Wallet}}</p>
+            <p><strong>Balance:</strong> ${{printf "%.2f" .User.Balance}}</p>
+            <p><strong>Join Date:</strong> {{.User.JoinDate}}</p>
+        </section>
+
+        <section>
+            <h2>Transfer Assets</h2>
+            <form action="/transactions" method="POST">
+                <label for="sender_wallet">Sender Wallet Address:</label>
+                <input type="text" id="sender_wallet" name="sender_wallet" value="{{.User.Wallet}}" readonly>
+
+                <label for="receiver_wallet">Receiver Wallet Address:</label>
+                <input type="text" id="receiver_wallet" name="receiver_wallet" required>
+
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" step="0.01" required>
+
+                <button type="submit">Submit Transaction</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Recent Transactions</h2>
+            <ul>
+                {{range .Transactions}}
+                <li>
+                    <strong>Sender:</strong> {{.Sender}} <br>
+                    <strong>Receiver:</strong> {{.Receiver}} <br>
+                    <strong>Amount:</strong> ${{printf "%.2f" .Amount}} <br>
+                    <strong>Timestamp:</strong> {{.Timestamp}}
+                </li>
+                {{end}}
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
