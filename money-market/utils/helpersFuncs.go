@@ -54,6 +54,18 @@ func Add(a, b float64) float64 {
 	return a + b
 }
 
+func Mul(a, b float64) float64 {
+	return a * b
+}
+
+func Format(date string) string {
+	parsed, err := time.Parse(time.RFC3339, date)
+	if err != nil {
+		return date
+	}
+	return parsed.Format("02 Jan 2006 15:04")
+}
+
 // function to hashes the password using SHA-256
 func GenerateHash(input string) string {
 	hash := sha256.Sum256([]byte(input))
@@ -151,43 +163,106 @@ func AddMoneyMarketAccount(account MoneyMarketAccount) {
 }
 
 // function to calculate the intrest rate for the fixed and non-fixed accounts in money market
+// func CalculateInterest() {
+// 	accounts := LoadMoneyMarketAccounts()
+// 	updated := false
+
+// 	for i, account := range accounts {
+// 		now := time.Now()
+
+// 		// Parse last interest date
+// 		lastInterestDate, _ := time.Parse(time.RFC3339, account.LastInterest)
+
+// 		// Non-Fixed Accounts: Apply monthly interest
+// 		if account.AccountType == "non-fixed" {
+// 			if now.Sub(lastInterestDate).Minutes() >= 720 { // 30 days
+// 				interest := account.Deposit * account.InterestRate
+// 				account.Deposit += interest
+// 				account.LastInterest = now.Format(time.RFC3339)
+// 				updated = true
+// 			}
+// 		}
+
+// 		// Fixed Accounts: Apply interest at maturity
+// 		if account.AccountType == "fixed" {
+// 			fixedEndDate, _ := time.Parse(time.RFC3339, account.FixedEndDate)
+// 			if now.After(fixedEndDate) && account.LastInterest == "" {
+// 				interest := account.Deposit * account.InterestRate
+// 				account.Deposit += interest
+// 				account.LastInterest = now.Format(time.RFC3339) // Mark interest as applied
+// 				updated = true
+// 			}
+// 		}
+
+// 		accounts[i] = account
+// 	}
+
+// 	// Save updated accounts if interest was calculated
+// 	if updated {
+// 		SaveMoneyMarketAccounts(accounts)
+// 		log.Println("Interest calculated and accounts updated.")
+// 	}
+// }
+
 func CalculateInterest() {
 	accounts := LoadMoneyMarketAccounts()
+	users := LoadUsers()
 	updated := false
 
 	for i, account := range accounts {
 		now := time.Now()
 
-		// Parse last interest date
+		// Parse last interest date or initialize it to the join date
 		lastInterestDate, _ := time.Parse(time.RFC3339, account.LastInterest)
+		if account.LastInterest == "" {
+			lastInterestDate, _ = time.Parse(time.RFC3339, account.JoinDate)
+		}
 
-		// Non-Fixed Accounts: Apply monthly interest
-		if account.AccountType == "non-fixed" {
-			if now.Sub(lastInterestDate).Hours() >= 720 { // 30 days
-				interest := account.Deposit * account.InterestRate
-				account.Deposit += interest
-				account.LastInterest = now.Format(time.RFC3339)
-				updated = true
+		// Find the user associated with this account
+		var user *User
+		for j := range users {
+			if users[j].Wallet == account.Wallet {
+				user = &users[j]
+				break
 			}
 		}
 
-		// Fixed Accounts: Apply interest at maturity
+		// Skip if user not found (data integrity issue)
+		if user == nil {
+			continue
+		}
+
+		// Non-Fixed Accounts: Apply interest every 1 minute (testing)
+		if account.AccountType == "non-fixed" {
+			if now.Sub(lastInterestDate).Minutes() >= 1 { // Testing interval: 1 minute
+				interest := account.Deposit * account.InterestRate
+				user.Balance += interest // Add interest to user's main balance
+				account.LastInterest = now.Format(time.RFC3339)
+				updated = true
+				log.Printf("Interest of %.2f added to user %s's balance for non-fixed account.", interest, user.Email)
+			}
+		}
+
+		// Fixed Accounts: Apply interest after 1 minute (testing)
 		if account.AccountType == "fixed" {
 			fixedEndDate, _ := time.Parse(time.RFC3339, account.FixedEndDate)
 			if now.After(fixedEndDate) && account.LastInterest == "" {
 				interest := account.Deposit * account.InterestRate
-				account.Deposit += interest
+				user.Balance += account.Deposit + interest      // Add deposit + interest to main balance
+				account.Deposit = 0                             // Clear deposit after maturity
 				account.LastInterest = now.Format(time.RFC3339) // Mark interest as applied
 				updated = true
+				log.Printf("Interest of %.2f added to user %s's balance for fixed account.", interest, user.Email)
 			}
 		}
 
 		accounts[i] = account
 	}
 
-	// Save updated accounts if interest was calculated
+	// Save updated accounts and users if any interest was calculated
 	if updated {
 		SaveMoneyMarketAccounts(accounts)
+		SaveUsers(users)
 		log.Println("Interest calculated and accounts updated.")
 	}
 }

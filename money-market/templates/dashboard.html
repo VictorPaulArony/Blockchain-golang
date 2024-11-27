@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../static/style.css">
 </head>
+
 <body>
     <header>
+        <nav>
+            <a href="/money-market">Join Money Market</a>
+        </nav>
+
         <h1>Welcome, {{.User.Name}}</h1>
+
     </header>
     <main>
         <section>
@@ -37,18 +44,74 @@
         </section>
 
         <section>
-            <h2>Recent Transactions</h2>
+            <h2>Transactions</h2>
+            <a href="/dashboard?view=all">
+                <button {{if .ViewingAll}}disabled{{end}}>View All Transactions</button>
+            </a>
+            <a href="/dashboard">
+                <button {{if not .ViewingAll}}disabled{{end}}>View My Transactions</button>
+            </a>
+
             <ul>
                 {{range .Transactions}}
+                <li>
+                    <strong>Sender:</strong> {{.Sender}} <br>
+                    <strong>Receiver:</strong> {{.Receiver}} <br>
+                    <strong>Amount:</strong> ${{.Amount}} <br>
+                    <strong>Timestamp:</strong> {{.Timestamp}}
+                </li>
+                {{else}}
+                <li>No transactions found.</li>
+                {{end}}
+            </ul>
+
+        </section>
+        <section>
+            <h2>Blockchain Overview</h2>
+            <p><strong>Total Blocks:</strong> {{len .Blockchain.Blocks}}</p>
+            <p><strong>Mempool Size:</strong> {{.MempoolSize}}</p>
+        
+            <h3>Mempool Transactions</h3>
+            <ul>
+                {{range .Blockchain.Mempool}}
                 <li>
                     <strong>Sender:</strong> {{.Sender}} <br>
                     <strong>Receiver:</strong> {{.Receiver}} <br>
                     <strong>Amount:</strong> ${{printf "%.2f" .Amount}} <br>
                     <strong>Timestamp:</strong> {{.Timestamp}}
                 </li>
+                {{else}}
+                <li>No pending transactions in the mempool.</li>
+                {{end}}
+            </ul>
+        
+            <h3>Blocks</h3>
+            <ul>
+                {{range .Blockchain.Blocks}}
+                <li>
+                    <strong>Block Index:</strong> {{.Index}} <br>
+                    <strong>Timestamp:</strong> {{.Timestamp}} <br>
+                    <strong>Previous Hash:</strong> {{.PrevHash}} <br>
+                    <strong>Hash:</strong> {{.Hash}} <br>
+                    <strong>Transactions:</strong>
+                    <ul>
+                        {{range .Transactions}}
+                        <li>
+                            <strong>Sender:</strong> {{.Sender}} <br>
+                            <strong>Receiver:</strong> {{.Receiver}} <br>
+                            <strong>Amount:</strong> ${{printf "%.2f" .Amount}} <br>
+                            <strong>Timestamp:</strong> {{.Timestamp}}
+                        </li>
+                        {{end}}
+                    </ul>
+                </li>
+                {{else}}
+                <li>No blocks available.</li>
                 {{end}}
             </ul>
         </section>
+        
     </main>
 </body>
+
 </html>

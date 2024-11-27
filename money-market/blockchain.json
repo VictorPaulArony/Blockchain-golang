@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "index": 0,
+      "timestamp": "2024-11-27T23:23:13+03:00",
+      "transactions": [],
+      "prev_hash": "0",
+      "hash": "89eb0ac031a63d2421cd05a2fbe41f3ea35f5c3712ca839cbf6b85c4ee07b7a3"
+    }
+  ],
+  "mempool": [
+    {
+      "id": "79118ad9-3a17-4a9b-a9b4-794f5c66db52",
+      "sender": "44b480265dd88f641c3ce49b095802ae9cbd3e6719ff35361d05b3db3a397771",
+      "receiver": "f5d2c8f08f483a54448ef8a4eb2e6b76f41b53453d6fe0f72af424def917fd7f",
+      "amount": 10,
+      "timestamp": "2024-11-27T23:39:15+03:00"
+    }
+  ]
+}

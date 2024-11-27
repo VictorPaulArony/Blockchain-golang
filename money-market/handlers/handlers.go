@@ -18,6 +18,8 @@ var blockchain blockchains.Blockchain
 // Templates for the pages to be used in the program
 var templates = template.Must(template.New("").Funcs(template.FuncMap{
 	"add": helpers.Add,
+	"mul": helpers.Mul,
+	"formatDate": helpers.Format,
 }).ParseFiles(
 	"templates/index.html",
 	"templates/dashboard.html",
@@ -179,7 +181,6 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "dashboard.html", data)
 }
 
-
 // TransactionHandler processes transactions
 func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -217,12 +218,12 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Update balances
+	// Deduct and update balances
 	senderUser.Balance -= amount
 	receiverUser.Balance += amount
 	helpers.SaveUsers(users)
 
-	// Add transaction to mempool
+	// Add transaction to the mempool
 	transaction := helpers.Transaction{
 		ID:        uuid.New().String(),
 		Sender:    sender,
@@ -230,9 +231,8 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		Amount:    amount,
 		Timestamp: time.Now().Format(time.RFC3339),
 	}
-	blockchain.Mempool = append(blockchain.Mempool, transaction)
+	blockchains.AddTransactionToMempool(transaction)
 
-	// Redirect back to the dashboard
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
 

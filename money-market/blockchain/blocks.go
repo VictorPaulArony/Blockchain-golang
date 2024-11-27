@@ -91,3 +91,9 @@ func MineBlock() {
 	SaveBlockchain()
 	log.Printf("Block %d mined successfully.", newBlock.Index)
 }
+
+func AddTransactionToMempool(transaction helpers.Transaction) {
+	blockchain.Mempool = append(blockchain.Mempool, transaction)
+	SaveBlockchain()
+	log.Printf("Transaction %s added to mempool.", transaction.ID)
+}

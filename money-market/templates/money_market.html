@@ -52,7 +52,33 @@
                 <p><strong>Total Balance:</strong> ${{printf "%.2f" (add .FixedBalance .NonFixedBalance)}}</p>
             </div>
         </section>
-
+        <table>
+            <thead>
+                <tr>
+                    <th>Account Type</th>
+                    <th>Deposit</th>
+                    <th>Interest Rate</th>
+                    <th>Join Date</th>
+                    <th>Time to Maturity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .UserAccounts}}
+                <tr>
+                    <td>{{.AccountType}}</td>
+                    <td>${{printf "%.2f" .Deposit}}</td>
+                    <td>{{printf "%.2f%%" (mul .InterestRate 100)}}</td>
+                    <td>{{.JoinDate}}</td>
+                    {{if eq .AccountType "fixed"}}
+                    <td>{{.FixedEndDate}}</td>
+                    {{else}}
+                    <td>Ongoing</td>
+                    {{end}}
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        
         <section>
             <h2>Join the Money Market</h2>
             <form action="/money-market" method="POST">

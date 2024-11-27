@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	blockchains "money-market/blockchain"
 	"money-market/handlers"
 	helpers "money-market/utils"
 )
@@ -18,9 +19,12 @@ func main() {
 	// http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Periodically calculate interest
+
+	blockchains.InitializeBlockchain()
+
 	go func() {
 		for {
-			time.Sleep(24 * time.Hour) // Run every 24 hours
+			time.Sleep(1 * time.Minute) // Run every 1 minute
 			helpers.CalculateInterest()
 		}
 	}()
