@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Market</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Money Market</h1>
+        <nav>
+            <a href="/dashboard">Back to Dashboard</a>
+        </nav>
+        <h1>Welcome, {{.User.Name}}</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Your Details</h2>
+            <p><strong>Email:</strong> {{.User.Email}}</p>
+            <p><strong>Phone:</strong> {{.User.Phone}}</p>
+            <p><strong>Wallet Address:</strong> {{.User.Wallet}}</p>
+            <p><strong>Balance:</strong> ${{printf "%.2f" .User.Balance}}</p>
+            <p><strong>Join Date:</strong> {{.User.JoinDate}}</p>
+        </section>
+        <section class="account-container">
+            <div class="account-details">
+                <h2>Your Accounts</h2>
+                <ul>
+                    {{range .UserAccounts}}
+                    <li>
+                        <strong>Account Type:</strong> {{.AccountType}} <br>
+                        <strong>Deposit:</strong> ${{printf "%.2f" .Deposit}} <br>
+                        <strong>Interest Rate:</strong> {{printf "%.2f" .InterestRate}}% <br>
+                        <strong>Join Date:</strong> {{.JoinDate}} <br>
+                        {{if eq .AccountType "fixed"}}
+                        <strong>Time to Maturity:</strong> {{.FixedEndDate}} <br>
+                        {{end}}
+                    </li>
+                    {{else}}
+                    <li>No accounts found.</li>
+                    {{end}}
+                </ul>
+            </div>
+
+            <div class="account-summary">
+                <h3>Account Summary</h3>
+                <p><strong>Total Fixed Balance:</strong> ${{printf "%.2f" .FixedBalance}}</p>
+                <p><strong>Total Non-Fixed Balance:</strong> ${{printf "%.2f" .NonFixedBalance}}</p>
+                <p><strong>Total Balance:</strong> ${{printf "%.2f" (add .FixedBalance .NonFixedBalance)}}</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Join the Money Market</h2>
+            <form action="/money-market" method="POST">
+                <label for="wallet">Wallet Address:</label>
+                <input type="text" id="wallet" name="wallet" required>
+
+                <label for="account_type">Account Type:</label>
+                <select id="account_type" name="account_type" required>
+                    <option value="fixed">Fixed</option>
+                    <option value="non-fixed">Non-Fixed</option>
+                </select>
+
+                <label for="deposit">Deposit Amount:</label>
+                <input type="number" id="deposit" name="deposit" min="100" required>
+
+                <button type="submit">Join</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>All Money Market Members</h2>
+            <ul>
+                {{range .AllAccounts}}
+                <li>
+                    <strong>Wallet:</strong> {{.Wallet}} <br>
+                    <strong>Account Type:</strong> {{.AccountType}} <br>
+                    <strong>Deposit:</strong> ${{printf "%.2f" .Deposit}} <br>
+                    <strong>Join Date:</strong> {{.JoinDate}}
+                </li>
+                {{else}}
+                <li>No members yet.</li>
+                {{end}}
+            </ul>
+        </section>
+    </main>
+
+</body>
+
+</html>
