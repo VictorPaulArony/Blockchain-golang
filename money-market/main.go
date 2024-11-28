@@ -26,6 +26,7 @@ func main() {
 		for {
 			time.Sleep(1 * time.Minute) // Run every 1 minute
 			helpers.CalculateInterest()
+			helpers.UpdateMarketTrends() //for market trends
 		}
 	}()
 
@@ -38,6 +39,7 @@ func main() {
 	http.HandleFunc("/dashboard", handlers.DashboardHandler)
 	http.HandleFunc("/transactions", handlers.TransactionHandler)
 	http.HandleFunc("/money-market", handlers.MoneyMarketHandler)
+	http.HandleFunc("/market-trends", handlers.MarketTrendsHandler) 
 
 	log.Println("Server started on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
