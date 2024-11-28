@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Market Trends</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome, {{.User.Name}}</h1>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/money-market">Money Market</a>
+            <a href="/market-trends">Market Trends</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Money Market Trends</h2>
+        <canvas id="trendChart" width="400" height="200"></canvas>
+        <script>
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            const trends = JSON.parse('{{ .Trends | toJSON | js }}');
+            
+            const labels = trends.map(t => new Date(t.Timestamp).toLocaleString());
+            const totalAmounts = trends.map(t => t.TotalAmount);
+            const userCounts = trends.map(t => t.UserCount);
+            
+            const trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total Amount in Market',
+                            data: totalAmounts,
+                            borderColor: 'blue',
+                            fill: false,
+                        },
+                        {
+                            label: 'Number of Users in Market',
+                            data: userCounts,
+                            borderColor: 'green',
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </main>
+</body>
+</html>
