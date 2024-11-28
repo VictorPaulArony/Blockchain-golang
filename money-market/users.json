@@ -7,7 +7,7 @@
     "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
     "wallet": "44b480265dd88f641c3ce49b095802ae9cbd3e6719ff35361d05b3db3a397771",
     "join_date": "2024-11-27T23:25:29+03:00",
-    "balance": 880
+    "balance": 780
   },
   {
     "id": "0c173c97-0ad9-4106-aab6-537943104240",
@@ -17,6 +17,6 @@
     "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
     "wallet": "f5d2c8f08f483a54448ef8a4eb2e6b76f41b53453d6fe0f72af424def917fd7f",
     "join_date": "2024-11-27T23:25:45+03:00",
-    "balance": 520
+    "balance": 320
   }
 ]

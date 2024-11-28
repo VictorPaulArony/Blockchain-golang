@@ -15,7 +15,7 @@
   "interest_rate": 0,
   "join_date": "2024-11-28T00:13:45+03:00",
   "fixed_end_date": "",
-  "last_interest": "2024-11-28T00:19:13+03:00"
+  "last_interest": "2024-11-28T13:56:02+03:00"
  },
  {
   "wallet": "f5d2c8f08f483a54448ef8a4eb2e6b76f41b53453d6fe0f72af424def917fd7f",
@@ -24,6 +24,33 @@
   "interest_rate": 0,
   "join_date": "2024-11-28T00:17:36+03:00",
   "fixed_end_date": "2025-11-28T00:17:36+03:00",
+  "last_interest": ""
+ },
+ {
+  "wallet": "f5d2c8f08f483a54448ef8a4eb2e6b76f41b53453d6fe0f72af424def917fd7f",
+  "account_type": "fixed",
+  "deposit": 100,
+  "interest_rate": 0,
+  "join_date": "2024-11-28T09:21:18+03:00",
+  "fixed_end_date": "2025-11-28T09:21:18+03:00",
+  "last_interest": ""
+ },
+ {
+  "wallet": "f5d2c8f08f483a54448ef8a4eb2e6b76f41b53453d6fe0f72af424def917fd7f",
+  "account_type": "fixed",
+  "deposit": 100,
+  "interest_rate": 0,
+  "join_date": "2024-11-28T09:26:36+03:00",
+  "fixed_end_date": "2025-11-28T09:26:36+03:00",
+  "last_interest": ""
+ },
+ {
+  "wallet": "44b480265dd88f641c3ce49b095802ae9cbd3e6719ff35361d05b3db3a397771",
+  "account_type": "fixed",
+  "deposit": 100,
+  "interest_rate": 0,
+  "join_date": "2024-11-28T09:32:05+03:00",
+  "fixed_end_date": "2025-11-28T09:32:05+03:00",
   "last_interest": ""
  }
 ]

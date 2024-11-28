@@ -83,7 +83,7 @@
             <h2>Join the Money Market</h2>
             <form action="/money-market" method="POST">
                 <label for="wallet">Wallet Address:</label>
-                <input type="text" id="wallet" name="wallet" required>
+                <input type="text" id="wallet" name="wallet" value="{{ .User.Wallet}}" readonly>
 
                 <label for="account_type">Account Type:</label>
                 <select id="account_type" name="account_type" required>

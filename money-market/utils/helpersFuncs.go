@@ -207,6 +207,7 @@ func AddMoneyMarketAccount(account MoneyMarketAccount) {
 func CalculateInterest() {
 	accounts := LoadMoneyMarketAccounts()
 	users := LoadUsers()
+	totalMoneyMarket := 0.0
 	updated := false
 
 	for i, account := range accounts {
@@ -229,6 +230,7 @@ func CalculateInterest() {
 
 		// Skip if user not found (data integrity issue)
 		if user == nil {
+			log.Printf("User not found for wallet %s. Skipping account.", account.Wallet)
 			continue
 		}
 
@@ -236,34 +238,42 @@ func CalculateInterest() {
 		if account.AccountType == "non-fixed" {
 			if now.Sub(lastInterestDate).Minutes() >= 1 { // Testing interval: 1 minute
 				interest := account.Deposit * account.InterestRate
-				user.Balance += interest // Add interest to user's main balance
+				user.Balance += interest    // Add interest to user's main balance
+				account.Deposit -= interest // Subtract from money market total
 				account.LastInterest = now.Format(time.RFC3339)
 				updated = true
-				log.Printf("Interest of %.2f added to user %s's balance for non-fixed account.", interest, user.Email)
+				// log.Printf("Interest of %.2f added to user %s's main balance for non-fixed account.", interest, user.Email)
 			}
 		}
 
-		// Fixed Accounts: Apply interest after 1 minute (testing)
+		// Fixed Accounts: Apply interest after maturity (testing: 1 minute)
 		if account.AccountType == "fixed" {
 			fixedEndDate, _ := time.Parse(time.RFC3339, account.FixedEndDate)
 			if now.After(fixedEndDate) && account.LastInterest == "" {
-				interest := account.Deposit * account.InterestRate
+				// interest := account.Deposit * account.InterestRate
+				interest := account.Deposit * 10
 				user.Balance += account.Deposit + interest      // Add deposit + interest to main balance
 				account.Deposit = 0                             // Clear deposit after maturity
 				account.LastInterest = now.Format(time.RFC3339) // Mark interest as applied
 				updated = true
-				log.Printf("Interest of %.2f added to user %s's balance for fixed account.", interest, user.Email)
+				// log.Printf("Matured interest of %.2f added to user %s's main balance for fixed account.", interest, user.Email)
 			}
 		}
 
+		// Update the account in the list
 		accounts[i] = account
+	}
+
+	// Calculate total money market balance after interest calculations
+	for _, account := range accounts {
+		totalMoneyMarket += account.Deposit
 	}
 
 	// Save updated accounts and users if any interest was calculated
 	if updated {
 		SaveMoneyMarketAccounts(accounts)
 		SaveUsers(users)
-		log.Println("Interest calculated and accounts updated.")
+		// log.Printf("Interest calculated, accounts updated, and money market total is now %.2f.", totalMoneyMarket)
 	}
 }
 
@@ -274,4 +284,65 @@ func FormatCountdown(duration time.Duration) string {
 	minutes := (duration % time.Hour) / time.Minute
 
 	return fmt.Sprintf("%dd %dh %dm", days, hours, minutes)
+}
+
+type MoneyMarketTrend struct {
+	Timestamp   string  `json:"timestamp"`
+	TotalAmount float64 `json:"total_amount"`
+	UserCount   int     `json:"user_count"`
+}
+
+const MarketTrendsFile = "market_trends.json"
+
+// LoadMarketTrends loads market trends from the JSON file
+func LoadMarketTrends() []MoneyMarketTrend {
+	data, err := os.ReadFile(MarketTrendsFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return []MoneyMarketTrend{}
+		}
+		log.Fatalf("Failed to load market trends: %v", err)
+	}
+	var trends []MoneyMarketTrend
+	json.Unmarshal(data, &trends)
+	return trends
+}
+
+// SaveMarketTrends saves market trends to the JSON file
+func SaveMarketTrends(trends []MoneyMarketTrend) {
+	data, err := json.MarshalIndent(trends, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to save market trends: %v", err)
+	}
+	os.WriteFile(MarketTrendsFile, data, 0o644)
+}
+
+// UpdateMarketTrends appends the latest trends to the file
+func UpdateMarketTrends() {
+	accounts := LoadMoneyMarketAccounts()
+	totalAmount := 0.0
+	userWallets := make(map[string]bool)
+
+	for _, account := range accounts {
+		totalAmount += account.Deposit
+		userWallets[account.Wallet] = true
+	}
+
+	trends := LoadMarketTrends()
+	newTrend := MoneyMarketTrend{
+		Timestamp:   time.Now().Format(time.RFC3339),
+		TotalAmount: totalAmount,
+		UserCount:   len(userWallets),
+	}
+	trends = append(trends, newTrend)
+	SaveMarketTrends(trends)
+}
+
+func ToJson(v interface{}) string {
+	data, err := json.Marshal(v)
+	if err != nil {
+		log.Printf("Error serializing data to JSON: %v", err)
+		return "[]"
+	}
+	return string(data)
 }
