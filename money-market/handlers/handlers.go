@@ -17,13 +17,15 @@ var blockchain blockchains.Blockchain
 
 // Templates for the pages to be used in the program
 var templates = template.Must(template.New("").Funcs(template.FuncMap{
-	"add": helpers.Add,
-	"mul": helpers.Mul,
+	"add":        helpers.Add,
+	"mul":        helpers.Mul,
 	"formatDate": helpers.Format,
+	"toJSON":     helpers.ToJson,
 }).ParseFiles(
 	"templates/index.html",
 	"templates/dashboard.html",
 	"templates/money_market.html",
+	"templates/market_trends.html",
 ))
 
 // RegisterHandler handles user registration
@@ -369,4 +371,38 @@ func MoneyMarketHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Redirect back to the money market page
 	http.Redirect(w, r, "/money-market", http.StatusSeeOther)
+}
+func MarketTrendsHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the user's email from the cookie
+	cookie, err := r.Cookie("user_email")
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	email := cookie.Value
+
+	// Fetch the current user's details
+	users := helpers.LoadUsers()
+	var currentUser helpers.User
+	for _, user := range users {
+		if user.Email == email {
+			currentUser = user
+			break
+		}
+	}
+
+	// Load market trends data
+	trends := helpers.LoadMarketTrends()
+
+	// Prepare data for the template
+	data := struct {
+		User   helpers.User
+		Trends []helpers.MoneyMarketTrend
+	}{
+		User:   currentUser,
+		Trends: trends,
+	}
+
+	// Render the market trends template
+	templates.ExecuteTemplate(w, "market_trends.html", data)
 }
