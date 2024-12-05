@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Request</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <h1>Loan Request</h1>
+    <p>Welcome, {{.User.Name}}</p>
+    <p>Credit Score: {{.CreditScore}}</p>
+    <p>Loan Grade: {{.LoanGrade}}</p>
+    <p>Max Loan Amount: {{.MaxLoanAmount}}</p>
+    <p>Membership Duration: {{.MembershipTime}} months</p>
+
+    <form action="/loan" method="post">
+        <label for="amount">Loan Amount:</label>
+        <input type="number" id="amount" name="amount" max="{{.MaxLoanAmount}}" required>
+        <button type="submit">Request Loan</button>
+    </form>
+</body>
+
+</html>

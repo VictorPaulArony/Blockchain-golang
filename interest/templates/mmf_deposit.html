@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Market Fund</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <section>
+        <h2>Check Matured Deposits</h2>
+        <a href="/matured-deposits">View Matured Deposits</a>
+    </section>
+    <h1>Money Market Fund Deposit</h1>
+    <p>User: {{.User.Name}}</p>
+    <p>Email: {{.User.Email}}</p>
+    <p>Current Balance: {{.User.Balance}}</p>
+
+    <section>
+        <h2>Join the Money Market</h2>
+        <form action="/money-market" method="post">
+            <label for="deposit">Deposit Amount:</label>
+            <input type="number" id="deposit" name="deposit" min="100" required>
+            <button type="submit">Deposit</button>
+        </form>
+    </section>
+    <h2>MMF Total Amount: {{ .MarketTotal }}</h2>
+    <h3>Your Deposits:</h3>
+    <ul>
+        {{range .UserDeposits}}
+        <li>Name: {{.Name}}, Email: {{.Email}}, Wallet: {{.Wallet}}, Joined: {{.Joined }}, Deposit: {{.Deposit}}, Status: {{.Status}}, Maturity: {{.Maturity}}</li>
+        {{else}}
+        <li>No deposits found for this user.</li>
+        {{end}}
+    </ul>
+
+    <h3>All MMF Members:</h3>
+    <ul>
+        {{range $wallet, $deposits := .AllDeposits}}
+        {{range $deposits}}
+        <li>Wallet: {{$wallet}}, Name: {{.Name}}, Email: {{.Email}}, Joined: {{ .Joined}}, Deposit: {{.Deposit}}, Status: {{.Status}}, Maturity: {{.Maturity}}</li>
+        {{end}}
+        {{end}}
+    </ul>
+
+</body>
+
+</html>

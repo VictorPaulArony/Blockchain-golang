@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matured Deposits</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <h1>Matured Deposits</h1>
+    <p>User: {{.User.Name}}</p>
+    <p>Email: {{.User.Email}}</p>
+    <p>Current Balance: ${{printf "%.2f" .User.Balance}}</p>
+
+    <h2>Total Profit Earned: ${{printf "%.2f" .TotalProfit}}</h2>
+
+    <h3>Matured Deposits:</h3>
+    <ul>
+        {{range .MaturedDeposits}}
+
+        <li>Name: {{.Name}}, Wallet: {{.Wallet}}, Deposit: {{.Deposit}}, Status: {{.Status}}, Maturity Date:
+            {{.MaturityDate | unixToTime}}</li>
+        {{else}}
+        <li>No matured deposits available.</li>
+        {{end}}
+    </ul>
+</body>
+
+</html>

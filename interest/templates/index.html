@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viarony Homepage</title>
+</head>
+<body>
+    <html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+		<script type="text/javascript">
+			window.tailwind.config = {
+				darkMode: ['class'],
+				theme: {
+					extend: {
+						colors: {
+							border: 'hsl(var(--border))',
+							input: 'hsl(var(--input))',
+							ring: 'hsl(var(--ring))',
+							background: 'hsl(var(--background))',
+							foreground: 'hsl(var(--foreground))',
+							primary: {
+								DEFAULT: 'hsl(var(--primary))',
+								foreground: 'hsl(var(--primary-foreground))'
+							},
+							secondary: {
+								DEFAULT: 'hsl(var(--secondary))',
+								foreground: 'hsl(var(--secondary-foreground))'
+							},
+							destructive: {
+								DEFAULT: 'hsl(var(--destructive))',
+								foreground: 'hsl(var(--destructive-foreground))'
+							},
+							muted: {
+								DEFAULT: 'hsl(var(--muted))',
+								foreground: 'hsl(var(--muted-foreground))'
+							},
+							accent: {
+								DEFAULT: 'hsl(var(--accent))',
+								foreground: 'hsl(var(--accent-foreground))'
+							},
+							popover: {
+								DEFAULT: 'hsl(var(--popover))',
+								foreground: 'hsl(var(--popover-foreground))'
+							},
+							card: {
+								DEFAULT: 'hsl(var(--card))',
+								foreground: 'hsl(var(--card-foreground))'
+							},
+						},
+					}
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer base {
+				:root {
+					--background: 0 0% 100%;
+--foreground: 240 10% 3.9%;
+--card: 0 0% 100%;
+--card-foreground: 240 10% 3.9%;
+--popover: 0 0% 100%;
+--popover-foreground: 240 10% 3.9%;
+--primary: 240 5.9% 10%;
+--primary-foreground: 0 0% 98%;
+--secondary: 240 4.8% 95.9%;
+--secondary-foreground: 240 5.9% 10%;
+--muted: 240 4.8% 95.9%;
+--muted-foreground: 240 3.8% 46.1%;
+--accent: 240 4.8% 95.9%;
+--accent-foreground: 240 5.9% 10%;
+--destructive: 0 84.2% 60.2%;
+--destructive-foreground: 0 0% 98%;
+--border: 240 5.9% 90%;
+--input: 240 5.9% 90%;
+--ring: 240 5.9% 10%;
+--radius: 0.5rem;
+				}
+				.dark {
+					--background: 240 10% 3.9%;
+--foreground: 0 0% 98%;
+--card: 240 10% 3.9%;
+--card-foreground: 0 0% 98%;
+--popover: 240 10% 3.9%;
+--popover-foreground: 0 0% 98%;
+--primary: 0 0% 98%;
+--primary-foreground: 240 5.9% 10%;
+--secondary: 240 3.7% 15.9%;
+--secondary-foreground: 0 0% 98%;
+--muted: 240 3.7% 15.9%;
+--muted-foreground: 240 5% 64.9%;
+--accent: 240 3.7% 15.9%;
+--accent-foreground: 0 0% 98%;
+--destructive: 0 62.8% 30.6%;
+--destructive-foreground: 0 0% 98%;
+--border: 240 3.7% 15.9%;
+--input: 240 3.7% 15.9%;
+--ring: 240 4.9% 83.9%;
+				}
+			}
+		</style>
+  </head>
+  <body>
+    
+<header class="bg-background text-foreground py-4 px-6 flex justify-between items-center">
+    <img src="https://placehold.co/150" alt="Aptonic Logo" class="h-8" />
+    <nav>
+        <a href="#" class="mr-4">Home</a>
+        <a href="#services" class="mr-4">Services</a>
+        <a href="#about" class="mr-4">About</a>
+        <a href="/signup" class="mr-4">Signup</a>
+        <a href="#contact" class="mr-4">Contact</a>
+    </nav>
+</header>
+
+<section class="bg-primary text-primary-foreground py-24 px-6 text-center">
+    <h1 class="text-4xl font-bold mb-4">Welcome to Viarony</h1>
+    <p class="text-lg mb-8">Your one-stop solution for all your digital needs</p>
+    <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 py-2 px-6 rounded-lg">Get Started</button>
+</section>
+
+<section class="bg-background text-foreground py-12 px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="bg-card p-6 rounded-lg">
+            <img src="https://placehold.co/150" alt="Feature 1" class="h-24 mb-4" />
+            <h2 class="text-xl font-bold mb-2">Feature 1</h2>
+            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        
+        <div class="bg-card p-6 rounded-lg">
+            <img src="https://placehold.co/150" alt="Feature 2" class="h-24 mb-4" />
+            <h2 class="text-xl font-bold mb-2">Feature 2</h2>
+            <p class="text-sm">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        
+        <div class="bg-card p-6 rounded-lg">
+            <img src="https://placehold.co/150" alt="Feature 3" class="h-24 mb-4" />
+            <h2 class="text-xl font-bold mb-2">Feature 3</h2>
+            <p class="text-sm">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-primary text-primary-foreground py-12 px-6 text-center">
+    <h2 class="text-2xl font-bold mb-4">What Our Clients Say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="bg-card p-6 rounded-lg">
+            <p class="italic mb-4">"Aptonic helped us boost our online presence significantly."</p>
+            <p class="font-semibold">- Client 1</p>
+        </div>
+        
+        <div class="bg-card p-6 rounded-lg">
+            <p class="italic mb-4">"Their services are top-notch and highly recommended."</p>
+            <p class="font-semibold">- Client 2</p>
+        </div>
+        
+        <div class="bg-card p-6 rounded-lg">
+            <p class="italic mb-4">"Working with Aptonic was a game-changer for our business."</p>
+            <p class="font-semibold">- Client 3</p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-background text-foreground py-12 px-6 text-center">
+    <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
+    <p class="mb-4">Have a project in mind? Reach out to us today!</p>
+    <button class="bg-accent text-accent-foreground hover:bg-accent/80 py-2 px-6 rounded-lg">Contact Now</button>
+</section>
+
+<footer class="bg-background text-foreground py-4 px-6 text-center">
+    <p>&copy; 2023 Viarony. All rights reserved.</p>
+</footer>
+  </body>
+</html>
+</body>
+</html>

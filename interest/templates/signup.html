@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <form action="/signup" method="POST">
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
+        <label>Full Name:</label>
+        <input type="text" name="name" required><br>
+        <label>Phone:</label>
+        <input type="text" name="phone" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <label>Confirm Password:</label>
+        <input type="password" name="confirm_password" required><br>
+        <button type="submit">Signup</button>
+        <p>Have an account? <a href="/login">login here</a>.</p>
+    </form>
+    <!-- <h1>Login</h1>
+    <form action="/login" method="POST">
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <button type="submit">Login</button>
+    </form> -->
+</body>
+
+</html>
