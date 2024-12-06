@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -9,6 +8,12 @@ import (
 	helpers "interest/src"
 
 	"github.com/google/uuid"
+)
+
+const (
+	transactionThreshold = 500.0  // Example threshold
+	baseLoanAmount       = 5000.0 // Minimum loan amount
+	maxLoanMultiplier    = 10.0   // Max loan factor for excellent credit
 )
 
 // LoanHandler processes loan requests.
@@ -39,15 +44,11 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check loan eligibility
+	// Check loan eligibility of the users
 	now := time.Now()
 	joinDate, _ := time.Parse("2006-01-02", currentUser.JoinDate)
-	membershipDuration := now.Sub(joinDate).Hours() / (24 * 30) // Months
-	fmt.Printf("%v", now.Sub(joinDate).String())
-
-	const transactionThreshold = 500.0 // Example threshold
-	const baseLoanAmount = 5000.0      // Minimum loan amount
-	const maxLoanMultiplier = 10.0     // Max loan factor for excellent credit
+	membershipDuration := now.Sub(joinDate).Hours() / (24 * 30) // using Months for now
+	// fmt.Printf("%v\n", now.Sub(joinDate).String())
 
 	if membershipDuration < 6 {
 		http.Error(w, "You must be a member for at least 6 months to apply for a loan.", http.StatusForbidden)
@@ -58,6 +59,8 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 	for _, txn := range currentUser.Transactions {
 		totalTransactions += txn.Amount
 	}
+
+	totalTransactions = totalTransactions / 2.0
 
 	if totalTransactions < transactionThreshold {
 		http.Error(w, "You must have transacted more than a certain amount to be eligible.", http.StatusForbidden)
@@ -71,16 +74,16 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch {
 	case creditScore >= 90:
-		loanGrade = "A+"
+		loanGrade = "A"
 		loanMultiplier = maxLoanMultiplier
 	case creditScore >= 75:
-		loanGrade = "A"
+		loanGrade = "B"
 		loanMultiplier = 7.5
 	case creditScore >= 50:
-		loanGrade = "B"
+		loanGrade = "C"
 		loanMultiplier = 5.0
 	default:
-		loanGrade = "C"
+		loanGrade = "D"
 		loanMultiplier = 2.5
 	}
 
@@ -123,17 +126,34 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// amount to be paid by user an interest is add to it and stored in the user loaners db
+	expaidToPay := requestedLoan + requestedLoan*(0.05)
+
 	// Record the loan request
 	newLoan := helpers.LoanRequest{
+		MoneyMarketTransaction: helpers.MoneyMarketTransaction{
+			Name:     currentUser.Name,
+			Wallet:   currentUser.Wallet,
+			Joined:   currentUser.JoinDate,
+			Maturity: 1,
+		},
 		ID:        uuid.New().String(),
-		Amount:    requestedLoan,
-		Status:    "Pending",
-		Requested: time.Now().Unix(),
+		Amount:    expaidToPay,
+		Status:    "Approved",
+		Requested: time.Now().Format("2006-01-02"),
 		Grade:     loanGrade,
+		DueDate:   time.Now().Add(30 * 24 * time.Hour).Unix(), // Set due date to 30 days from now
 	}
+
+	// expected is also add to user load slice in user main account
 	currentUser.Loans = append(currentUser.Loans, newLoan)
 
-	// Save updated user data
+	if err := helpers.AddMoneyMarketLoan(newLoan); err != nil {
+		http.Error(w, "Error adding money market loaner", http.StatusInternalServerError)
+		return
+	}
+	// Save updated user data with the requested amount
+	currentUser.Balance += requestedLoan
 	if err := wallet.SaveData(); err != nil {
 		http.Error(w, "Error saving loan data", http.StatusInternalServerError)
 		return
