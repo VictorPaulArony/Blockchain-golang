@@ -44,20 +44,7 @@ type Transaction struct {
 	Timestamp string  `json:"timestamp"`
 }
 
-// LoanRequest using the common struct with a status field
-type LoanRequest struct {
-	ID        string  `json:"id"`
-	Amount    float64 `json:"amount"`
-	Status    string  `json:"status"` // Pending, Approved, Late, Defaulted
-	Requested int64   `json:"requested"`
-	Grade     string  `json:"grade"`
-}
 
-// MoneyMarketLoan struct for managing loans
-type MoneyMarketLoan struct {
-	Total   float64       `json:"total"`
-	Members []LoanRequest `json:"members"` // List of loan requests
-}
 
 // constant variables for file names
 const (
