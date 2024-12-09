@@ -1,0 +1,208 @@
+{
+  "Users": {
+    "smallypauls@gmail.com": {
+      "id": "da2c4408-7cb1-473f-8014-88f7397644d5",
+      "email": "smallypauls@gmail.com",
+      "name": "smally pauls",
+      "phone": "0759080909",
+      "address": "b6ac42daafac5390717e3b8bafd814bbf8d62ba6716d145fd2ef94345b969f3a",
+      "privateKey": "16b08fcd910d73586efaf4743da66f96b0d7452db36d178b9c41ef0aa3d21c32",
+      "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+      "join_date": "2024-12-04 12:04:10",
+      "balance": 5068.5,
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "transactions": [
+        {
+          "id": "5cda0d32-5987-421a-953c-356bb6ea6df3",
+          "sender": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "receiver": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "amount": 10,
+          "timestamp": "2024-12-04T12:05:11+03:00"
+        },
+        {
+          "id": "571fad60-756c-4776-ae76-faf98010c9bd",
+          "sender": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "receiver": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "amount": 1000,
+          "timestamp": "2024-12-04T16:52:42+03:00"
+        },
+        {
+          "id": "956ff58d-a1c9-4f54-af0b-ff21efcce29b",
+          "sender": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "receiver": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "amount": 500,
+          "timestamp": "2024-12-04T17:07:25+03:00"
+        }
+      ],
+      "Loans": [
+        {
+          "id": "25959367-5d47-426f-971e-3fd2b5d22c76",
+          "amount": 100,
+          "status": "Pending",
+          "requested": 1733320403,
+          "grade": "A+"
+        },
+        {
+          "id": "294f913b-5840-409c-aff6-504a2e8a5ad4",
+          "amount": 1000,
+          "status": "Pending",
+          "requested": 1733320463,
+          "grade": "A+"
+        },
+        {
+          "id": "b2f0fd75-4188-4807-a4b7-d74d89302714",
+          "amount": 100,
+          "status": "Pending",
+          "requested": 1733329880,
+          "grade": "A+"
+        },
+        {
+          "id": "3400d46e-1bdb-4acb-9da1-ac913f3b788a",
+          "amount": 100,
+          "status": "Pending",
+          "requested": 1733329894,
+          "grade": "A+"
+        }
+      ],
+      "mmfs": [
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733303240
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733304754
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733305096
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733312582
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 200,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733312597
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733312617
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 385,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733312742
+        },
+        {
+          "name": "smally pauls",
+          "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "joined": "2024-12-04 12:04:10",
+          "deposit": 500,
+          "status": "Matured",
+          "email": "smallypauls@gmail.com",
+          "maturity": 1733315579
+        }
+      ]
+    },
+    "victor@gmail.com": {
+      "id": "1225daa6-5a67-4850-975f-ac5f44ae1c57",
+      "email": "victor@gmail.com",
+      "name": "victor",
+      "phone": "0712345678",
+      "address": "f526c41d726cfa8de6c34ba320f1eb8d50d2d4c0348da57a7c718f98580c26ce",
+      "privateKey": "4c7517db92ab77f297f1f7f05e32f0400959b67e5c4fffb1ef69e9113b867c9d",
+      "wallet": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+      "join_date": "2024-12-04 12:04:27",
+      "balance": 1525,
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "transactions": [
+        {
+          "id": "5cda0d32-5987-421a-953c-356bb6ea6df3",
+          "sender": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "receiver": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "amount": 10,
+          "timestamp": "2024-12-04T12:05:11+03:00"
+        },
+        {
+          "id": "571fad60-756c-4776-ae76-faf98010c9bd",
+          "sender": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "receiver": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "amount": 1000,
+          "timestamp": "2024-12-04T16:52:42+03:00"
+        },
+        {
+          "id": "956ff58d-a1c9-4f54-af0b-ff21efcce29b",
+          "sender": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "receiver": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+          "amount": 500,
+          "timestamp": "2024-12-04T17:07:25+03:00"
+        }
+      ],
+      "Loans": [],
+      "mmfs": [
+        {
+          "name": "victor",
+          "wallet": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "joined": "2024-12-04 12:04:27",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "victor@gmail.com",
+          "maturity": 1733313792
+        },
+        {
+          "name": "victor",
+          "wallet": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "joined": "2024-12-04 12:04:27",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "victor@gmail.com",
+          "maturity": 1733315735
+        },
+        {
+          "name": "victor",
+          "wallet": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+          "joined": "2024-12-04 12:04:27",
+          "deposit": 100,
+          "status": "Matured",
+          "email": "victor@gmail.com",
+          "maturity": 1733316269
+        }
+      ]
+    }
+  }
+}
