@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investors</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <h1>Investors</h1>
+    <p>Welcome, {{.User.Name}}</p>
+    <h2>Transfer Funds to Money Market Account</h2>
+    <form action="/investors/transfer" method="post">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="submit">Transfer</button>
+    </form>
+
+    {{if .CurrentInvestor}}
+    <h2>Your Investor Profile</h2>
+    <p>Status: {{.CurrentInvestor.Status}}</p>
+    <p>Total Amount Invested: {{.CurrentInvestor.TotalAmount}}</p>
+    <p>Interest Rate: {{.CurrentInvestor.InterestRate}}%</p>
+    {{else}}
+    <h2>Become an Investor</h2>
+    <form action="/investors" method="post">
+        <button type="submit">Apply to Become an Investor</button>
+    </form>
+    {{end}}
+
+    <h2>Current Investors</h2>
+    <ul>
+        {{range .InvestorData.Inverstors}}
+        {{range .}} <!-- Inner range to iterate over each MoneyMarketInvestor -->
+        <li>{{.Investor}} - Total Amount: {{.TotalAmount}} - Status: {{.Status}}</li>
+        {{end}}
+        {{end}}
+    </ul>
+</body>
+
+</html>
