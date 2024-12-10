@@ -1,11 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>viarony-errorpage</title>
+
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #2d3748;
+            --card: #ffffff;
+            --card-foreground: #2d3748;
+            --primary: #4f46e5;
+            --primary-foreground: #ffffff;
+            --secondary: #f7f9fc;
+            --secondary-foreground: #334155;
+            --accent: #6366f1;
+            --accent-foreground: #ffffff;
+            --success: #059669;
+            --warning: #d97706;
+            --muted: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--card);
+            color: var(--foreground);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            margin-right: 1.5rem;
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover:after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        button:hover {
+            background: var(--accent);
+        }
+
+        section {
+            height: 400px;
+            background: var(--secondary);
+            margin-top: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        footer {
+            background: var(--primary);
+            bottom: 0;
+            position: absolute;
+            width: 100%;
+            color: var(--primary-foreground);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
-    <h1> ERROR {{ .Code }}</h1>
+    <header>
+        <svg width="150" height="50" viewBox="0 0 150 50">
+            <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#6366f1"><a href="/">Viarony
+                </a></text>
+        </svg>
+        <nav>
+            <a href="/money-market">Join Money Market</a>
+            <a href="/loan">Request Loan</a>
+            <a href="/investors">Join Investors</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2> ERROR: {{ .Code }}</h2>
+    </section>
+
+    <footer>
+        <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+        <p>Address: 123 Financial District, Business City, BZ 12345</p>
+        <p>&copy; 2023 Viarony. All rights reserved.</p>
+    </footer>
 </body>
+
 </html>
