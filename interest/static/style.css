@@ -1,78 +1,195 @@
-body {
-    font-family: Arial, sans-serif;
+:root {
+    --background: #ffffff;
+    --foreground: #2d3748;
+    --card: #ffffff;
+    --card-foreground: #2d3748;
+    --primary: #4f46e5;
+    --primary-foreground: #ffffff;
+    --secondary: #f7f9fc;
+    --secondary-foreground: #334155;
+    --accent: #6366f1;
+    --accent-foreground: #ffffff;
+    --success: #059669;
+    --warning: #d97706;
+    --muted: #f1f5f9;
+  }
+
+  * {
+    box-sizing: border-box;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-h1 {
-    color: #333;
-}
-
-form {
-    margin-bottom: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-ul {
-    list-style: none;
     padding: 0;
-}
+  }
 
-ul li {
-    background: white;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    line-height: 1.6;
+  }
 
-.account-container {
+  header {
+    background: var(--card);
+    color: var(--foreground);
+    padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
-}
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+  }
 
-.account-details {
-    width: 50%;
-}
+  .logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--primary);
+    text-decoration: none;
+  }
 
-.account-summary {
-    width: 45%;
-    border-left: 2px solid #ccc;
-    padding-left: 20px;
-}
+  nav a {
+    margin-right: 1.5rem;
+    color: var(--foreground);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+  }
 
+  nav a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background: var(--primary);
+    transition: width 0.3s ease;
+  }
 
+  nav a:hover:after {
+    width: 100%;
+  }
+
+  nav a:hover {
+    color: var(--primary);
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  section {
+    background: var(--card);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  h1, h2, h3 {
+    color: var(--foreground);
+    margin-bottom: 1.5rem;
+  }
+
+  form {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--muted);
+    border-radius: 0.5rem;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  input[readonly] {
+    background: var(--muted);
+  }
+
+  button {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background: var(--accent);
+  }
+
+  button:disabled {
+    background: var(--muted);
+    cursor: not-allowed;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    background: var(--secondary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  footer {
+    background: var(--primary);
+    bottom: 0;
+    /* position: absolute; */
+    width: 100%;
+    color: var(--primary-foreground);
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  footer p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    nav {
+      margin: 1rem 0;
+    }
+  }
