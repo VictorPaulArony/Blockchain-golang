@@ -9,23 +9,44 @@
 </head>
 
 <body>
-    <h1>Matured Deposits</h1>
-    <p>User: {{.User.Name}}</p>
-    <p>Email: {{.User.Email}}</p>
-    <p>Current Balance: ${{printf "%.2f" .User.Balance}}</p>
+    <header>
+        <svg width="150" height="50" viewBox="0 0 150 50">
+            <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#6366f1"><a href="/">Viarony
+                </a></text>
+        </svg>
+        <nav>
+            <a href="/money-market">Join Money Market</a>
+            <a href="/loan">Request Loan</a>
+            <a href="/investors">Join Investors</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <section>
+        <h2>Matured Deposits</h2>
+        <p><strong>User:</strong> {{.User.Name}}</p>
+        <p><strong>Email:</strong> {{.User.Email}}</p>
+        <p><strong>Phone:</strong> {{.User.Phone}}</p>
+        <p><strong>Wallet Address:</strong> {{.User.Wallet}}</p>
+        <p><strong>Balance:</strong> ${{printf "%.2f" .User.Balance}}</p>
+        <h2>Total Profit Earned: ${{printf "%.2f" .TotalProfit}}</h2>
+    </section>
+    <section>
+        <h3>Matured Deposits:</h3>
+        <ul>
+            {{range .MaturedDeposits}}
 
-    <h2>Total Profit Earned: ${{printf "%.2f" .TotalProfit}}</h2>
-
-    <h3>Matured Deposits:</h3>
-    <ul>
-        {{range .MaturedDeposits}}
-
-        <li>Name: {{.Name}}, Wallet: {{.Wallet}}, Deposit: {{.Deposit}}, Status: {{.Status}}, Maturity Date:
-            {{.MaturityDate | unixToTime}}</li>
-        {{else}}
-        <li>No matured deposits available.</li>
-        {{end}}
-    </ul>
+            <li>Name: {{.Name}}, Wallet: {{.Wallet}}, Deposit: {{.Deposit}}, Status: {{.Status}}, Maturity Date:
+                {{.MaturityDate | unixToTime}}</li>
+            {{else}}
+            <li>No matured deposits available.</li>
+            {{end}}
+        </ul>
+    </section>
+    <footer>
+        <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+        <p>Address: 123 Financial District, Business City, BZ 12345</p>
+        <p>&copy; 2023 Viarony. All rights reserved.</p>
+    </footer>
 </body>
 
 </html>
