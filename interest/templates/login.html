@@ -1,22 +1,253 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head><base href="/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Market</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-<body>
-    <h1>Login</h1>
-    <form method="post" action="/login">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/signup">Sign up here</a>.</p>
-</body>
-</html>
+    <title>Viarony - Login</title>
+    <style>
+     :root {
+       --background: #ffffff;
+       --foreground: #2d3748;
+       --card: #ffffff;
+       --card-foreground: #2d3748;
+       --primary: #4f46e5;
+       --primary-foreground: #ffffff;
+       --secondary: #f7f9fc;
+       --secondary-foreground: #334155;
+       --accent: #6366f1;
+       --accent-foreground: #ffffff;
+       --success: #059669;
+       --warning: #d97706;
+       --muted: #f1f5f9;
+     }
+   
+     * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+     }
+   
+     body {
+       margin: 0;
+       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+       background: var(--background);
+       color: var(--foreground);
+       line-height: 1.6;
+     }
+   
+     header {
+       background: var(--card);
+       color: var(--foreground);
+       padding: 1rem 1.5rem;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+       position: sticky;
+       top: 0;
+       z-index: 100;
+     }
+   
+     .logo {
+       font-weight: bold;
+       font-size: 1.5rem;
+       color: var(--primary);
+       text-decoration: none;
+     }
+   
+     nav a {
+       margin-right: 1.5rem;
+       color: var(--foreground);
+       text-decoration: none;
+       font-weight: 500;
+       transition: color 0.2s;
+       position: relative;
+     }
+   
+     nav a:after {
+       content: '';
+       position: absolute;
+       width: 0;
+       height: 2px;
+       bottom: -4px;
+       left: 0;
+       background: var(--primary);
+       transition: width 0.3s ease;
+     }
+   
+     nav a:hover:after {
+       width: 100%;
+     }
+   
+     nav a:hover {
+       color: var(--primary);
+     }
+   
+     .hero {
+       background: linear-gradient(135deg, var(--primary), var(--accent));
+       color: var(--primary-foreground);
+       padding: 4rem 1.5rem;
+       text-align: center;
+     }
+   
+     .hero h1 {
+       font-size: 3rem;
+       margin-bottom: 1rem;
+     }
+   
+     .hero p {
+       font-size: 1.25rem;
+       opacity: 0.9;
+     }
+   
+     .login-container {
+       max-width: 400px;
+       margin: 2rem auto;
+       padding: 2rem;
+     }
+   
+     .login-form {
+       background: var(--card);
+       padding: 2rem;
+       border-radius: 1rem;
+       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+     }
+   
+     .form-group {
+       margin-bottom: 1.5rem;
+     }
+   
+     .form-group label {
+       display: block;
+       margin-bottom: 0.5rem;
+       color: var(--foreground);
+       font-weight: 500;
+     }
+   
+     .form-group input {
+       width: 100%;
+       padding: 0.75rem;
+       border: 1px solid var(--muted);
+       border-radius: 0.5rem;
+       background: var(--background);
+       color: var(--foreground);
+       font-family: inherit;
+       transition: border-color 0.3s ease;
+     }
+   
+     .form-group input:focus {
+       outline: none;
+       border-color: var(--primary);
+     }
+   
+     .forgot-password {
+       text-align: right;
+       margin-bottom: 1.5rem;
+     }
+   
+     .forgot-password a {
+       color: var(--primary);
+       text-decoration: none;
+       font-size: 0.875rem;
+     }
+   
+     .forgot-password a:hover {
+       text-decoration: underline;
+     }
+   
+     button {
+       width: 100%;
+       background: var(--primary);
+       color: var(--primary-foreground);
+       padding: 0.75rem 1.5rem;
+       border: none;
+       border-radius: 0.5rem;
+       font-weight: 500;
+       cursor: pointer;
+       transition: background-color 0.3s ease;
+     }
+   
+     button:hover {
+       background: var(--accent);
+     }
+   
+     .signup-link {
+       text-align: center;
+       margin-top: 1.5rem;
+     }
+   
+     .signup-link a {
+       color: var(--primary);
+       text-decoration: none;
+     }
+   
+     .signup-link a:hover {
+       text-decoration: underline;
+     }
+   
+     footer {
+       background: var(--card);
+       color: var(--foreground);
+       text-align: center;
+       padding: 2rem 1.5rem;
+       border-top: 1px solid var(--secondary);
+     }
+   
+     @media (max-width: 768px) {
+       nav {
+         display: none;
+       }
+       .hero h1 {
+         font-size: 2.5rem;
+       }
+       .login-container {
+         padding: 1rem;
+       }
+     }
+    </style>
+   </head>
+   <body>
+   
+   <header>
+       <svg width="150" height="50" viewBox="0 0 150 50">
+           <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#6366f1">Viarony</text>
+       </svg>
+       <nav>
+           <a href="/">Home</a>
+              <a href="/services">Services</a>
+              <a href="/about">About</a>
+              <a href="/signup">Signup</a>
+              <a href="/contact">Contact</a>
+       </nav>
+   </header>
+   
+   <section class="hero">
+       <h1>Welcome Back</h1>
+       <p>Log in to access your financial dashboard and manage your investments</p>
+   </section>
+   
+   <div class="login-container">
+       <form class="login-form"  method="post" action="/login">
+           <div class="form-group">
+               <label for="email">Email Address</label>
+               <input type="email" id="email" name="email" required>
+           </div>
+           <div class="form-group">
+               <label for="password">Password</label>
+               <input type="password" id="password" name="password" required>
+           </div>
+           <div class="forgot-password">
+               <a href="/reset-password">Forgot your password?</a>
+           </div>
+           <button type="submit">Log In</button>
+           <div class="signup-link">
+               Don't have an account? <a href="/signup">Sign up</a>
+           </div>
+       </form>
+   </div>
+   
+   <footer>
+       <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+       <p>Address: 123 Financial District, Business City, BZ 12345</p>
+       <p>&copy; 2023 Viarony. All rights reserved.</p>
+   </footer>
+   
+   </body></html>
