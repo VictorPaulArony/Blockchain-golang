@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repay Loan</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <nav>
+        <a href="/loan">Go Back</a>
+    </nav>
+
+    <h1>Repay Loan</h1>
+    <p>Welcome, {{.User.Name}}</p>
+    <form action="/repay-loan" method="post">
+        <label for="amount">Repayment Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="submit">Repay Loan</button>
+    </form>
+</body>
+
+</html>
