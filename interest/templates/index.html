@@ -1,182 +1,435 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head><base href="/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viarony Homepage</title>
-</head>
-<body>
-    <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
-		<script type="text/javascript">
-			window.tailwind.config = {
-				darkMode: ['class'],
-				theme: {
-					extend: {
-						colors: {
-							border: 'hsl(var(--border))',
-							input: 'hsl(var(--input))',
-							ring: 'hsl(var(--ring))',
-							background: 'hsl(var(--background))',
-							foreground: 'hsl(var(--foreground))',
-							primary: {
-								DEFAULT: 'hsl(var(--primary))',
-								foreground: 'hsl(var(--primary-foreground))'
-							},
-							secondary: {
-								DEFAULT: 'hsl(var(--secondary))',
-								foreground: 'hsl(var(--secondary-foreground))'
-							},
-							destructive: {
-								DEFAULT: 'hsl(var(--destructive))',
-								foreground: 'hsl(var(--destructive-foreground))'
-							},
-							muted: {
-								DEFAULT: 'hsl(var(--muted))',
-								foreground: 'hsl(var(--muted-foreground))'
-							},
-							accent: {
-								DEFAULT: 'hsl(var(--accent))',
-								foreground: 'hsl(var(--accent-foreground))'
-							},
-							popover: {
-								DEFAULT: 'hsl(var(--popover))',
-								foreground: 'hsl(var(--popover-foreground))'
-							},
-							card: {
-								DEFAULT: 'hsl(var(--card))',
-								foreground: 'hsl(var(--card-foreground))'
-							},
-						},
-					}
-				}
-			}
-		</script>
-		<style type="text/tailwindcss">
-			@layer base {
-				:root {
-					--background: 0 0% 100%;
---foreground: 240 10% 3.9%;
---card: 0 0% 100%;
---card-foreground: 240 10% 3.9%;
---popover: 0 0% 100%;
---popover-foreground: 240 10% 3.9%;
---primary: 240 5.9% 10%;
---primary-foreground: 0 0% 98%;
---secondary: 240 4.8% 95.9%;
---secondary-foreground: 240 5.9% 10%;
---muted: 240 4.8% 95.9%;
---muted-foreground: 240 3.8% 46.1%;
---accent: 240 4.8% 95.9%;
---accent-foreground: 240 5.9% 10%;
---destructive: 0 84.2% 60.2%;
---destructive-foreground: 0 0% 98%;
---border: 240 5.9% 90%;
---input: 240 5.9% 90%;
---ring: 240 5.9% 10%;
---radius: 0.5rem;
-				}
-				.dark {
-					--background: 240 10% 3.9%;
---foreground: 0 0% 98%;
---card: 240 10% 3.9%;
---card-foreground: 0 0% 98%;
---popover: 240 10% 3.9%;
---popover-foreground: 0 0% 98%;
---primary: 0 0% 98%;
---primary-foreground: 240 5.9% 10%;
---secondary: 240 3.7% 15.9%;
---secondary-foreground: 0 0% 98%;
---muted: 240 3.7% 15.9%;
---muted-foreground: 240 5% 64.9%;
---accent: 240 3.7% 15.9%;
---accent-foreground: 0 0% 98%;
---destructive: 0 62.8% 30.6%;
---destructive-foreground: 0 0% 98%;
---border: 240 3.7% 15.9%;
---input: 240 3.7% 15.9%;
---ring: 240 4.9% 83.9%;
-				}
-			}
-		</style>
-  </head>
-  <body>
-    
-<header class="bg-background text-foreground py-4 px-6 flex justify-between items-center">
-    <img src="https://placehold.co/150" alt="Aptonic Logo" class="h-8" />
-    <nav>
-        <a href="#" class="mr-4">Home</a>
-        <a href="#services" class="mr-4">Services</a>
-        <a href="#about" class="mr-4">About</a>
-        <a href="/signup" class="mr-4">Signup</a>
-        <a href="#contact" class="mr-4">Contact</a>
-    </nav>
-</header>
-
-<section class="bg-primary text-primary-foreground py-24 px-6 text-center">
-    <h1 class="text-4xl font-bold mb-4">Welcome to Viarony</h1>
-    <p class="text-lg mb-8">Your one-stop solution for all your digital needs</p>
-    <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 py-2 px-6 rounded-lg">Get Started</button>
-</section>
-
-<section class="bg-background text-foreground py-12 px-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <div class="bg-card p-6 rounded-lg">
-            <img src="https://placehold.co/150" alt="Feature 1" class="h-24 mb-4" />
-            <h2 class="text-xl font-bold mb-2">Feature 1</h2>
-            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-        
-        <div class="bg-card p-6 rounded-lg">
-            <img src="https://placehold.co/150" alt="Feature 2" class="h-24 mb-4" />
-            <h2 class="text-xl font-bold mb-2">Feature 2</h2>
-            <p class="text-sm">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-        
-        <div class="bg-card p-6 rounded-lg">
-            <img src="https://placehold.co/150" alt="Feature 3" class="h-24 mb-4" />
-            <h2 class="text-xl font-bold mb-2">Feature 3</h2>
-            <p class="text-sm">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-        </div>
-    </div>
-</section>
-
-<section class="bg-primary text-primary-foreground py-12 px-6 text-center">
-    <h2 class="text-2xl font-bold mb-4">What Our Clients Say</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <div class="bg-card p-6 rounded-lg">
-            <p class="italic mb-4">"Aptonic helped us boost our online presence significantly."</p>
-            <p class="font-semibold">- Client 1</p>
-        </div>
-        
-        <div class="bg-card p-6 rounded-lg">
-            <p class="italic mb-4">"Their services are top-notch and highly recommended."</p>
-            <p class="font-semibold">- Client 2</p>
-        </div>
-        
-        <div class="bg-card p-6 rounded-lg">
-            <p class="italic mb-4">"Working with Aptonic was a game-changer for our business."</p>
-            <p class="font-semibold">- Client 3</p>
-        </div>
-    </div>
-</section>
-
-<section class="bg-background text-foreground py-12 px-6 text-center">
-    <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
-    <p class="mb-4">Have a project in mind? Reach out to us today!</p>
-    <button class="bg-accent text-accent-foreground hover:bg-accent/80 py-2 px-6 rounded-lg">Contact Now</button>
-</section>
-
-<footer class="bg-background text-foreground py-4 px-6 text-center">
-    <p>&copy; 2023 Viarony. All rights reserved.</p>
-</footer>
-  </body>
-</html>
-</body>
-</html>
+    <title>Viarony - Financial Solutions</title>
+    <style>
+     :root {
+       --background: #ffffff;
+       --foreground: #1a202c;
+       --card: #ffffff;
+       --card-foreground: #1a202c;
+       --primary: #6C63FF;
+       --primary-foreground: #ffffff;
+       --secondary: #E8F4FF;
+       --secondary-foreground: #1a202c;
+       --accent: #FF6B6B;
+       --accent-foreground: #ffffff;
+       --success: #00C9A7;
+       --warning: #FFC75F;
+     }
+   
+     body {
+       margin: 0;
+       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+       background: var(--background);
+       color: var(--foreground);
+       line-height: 1.7;
+       font-size: 1.05rem;
+     }
+   
+     header {
+       background: linear-gradient(135deg, var(--primary), #8A7FFF);
+       color: var(--primary-foreground);
+       padding: 1rem 1.5rem;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+       position: fixed;
+       width: 100%;
+       top: 0;
+       z-index: 1000;
+       box-sizing: border-box;
+     }
+   
+     nav a {
+       margin-right: 1.5rem;
+       color: var(--primary-foreground);
+       text-decoration: none;
+       font-weight: 500;
+       transition: all 0.3s;
+     }
+   
+     nav a:hover {
+       color: var(--warning);
+       transform: translateY(-2px);
+     }
+   
+     .hero {
+       background: linear-gradient(135deg, #6C63FF, #FF6B6B);
+       color: var(--primary-foreground);
+       padding: 8rem 1.5rem 6rem;
+       text-align: center;
+       margin-top: 60px;
+     }
+   
+     .hero h1 {
+       font-size: 3.5rem;
+       margin-bottom: 1.5rem;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+     }
+   
+     .hero p {
+       font-size: 1.35rem;
+       margin-bottom: 2.5rem;
+       opacity: 1;
+       font-weight: 500;
+     }
+   
+     button {
+       background: var(--warning);
+       color: #2D3748;
+       padding: 0.75rem 2rem;
+       border: none;
+       border-radius: 0.75rem;
+       cursor: pointer;
+       font-size: 1.125rem;
+       font-weight: 600;
+       transition: all 0.3s;
+       box-shadow: 0 4px 12px rgba(255, 199, 95, 0.3);
+     }
+   
+     button:hover {
+       transform: translateY(-3px);
+       box-shadow: 0 6px 15px rgba(255, 199, 95, 0.4);
+       background: #FFD68A;
+     }
+   
+     .features {
+       padding: 4rem 1.5rem;
+       max-width: 1200px;
+       margin: 0 auto;
+       background: #FAFBFF;
+     }
+   
+     .features-grid {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+       gap: 2rem;
+       margin-bottom: 4rem;
+     }
+   
+     .feature-card {
+       background: var(--card);
+       padding: 2rem;
+       border-radius: 1rem;
+       box-shadow: 0 8px 20px rgba(108, 99, 255, 0.1);
+       transition: transform 0.3s;
+       border: 2px solid #E8F4FF;
+     }
+   
+     .feature-card:hover {
+       transform: translateY(-5px);
+       border-color: var(--primary);
+     }
+   
+     .feature-card h3 {
+       color: var(--primary);
+       font-size: 1.6rem;
+       margin-bottom: 1rem;
+     }
+   
+     .feature-card p {
+       font-size: 1.1rem;
+       color: #1a202c;
+     }
+   
+     .service-section {
+       padding: 4rem 1.5rem;
+       max-width: 1200px;
+       margin: 0 auto;
+       background: linear-gradient(135deg, #F5F7FF, #FFFFFF);
+     }
+   
+     .service-card {
+       background: var(--card);
+       padding: 2rem;
+       border-radius: 1rem;
+       margin-bottom: 2rem;
+       box-shadow: 0 8px 20px rgba(108, 99, 255, 0.1);
+       border: 2px solid #E8F4FF;
+     }
+   
+     .service-card h3 {
+       color: var(--accent);
+       margin-bottom: 1rem;
+       font-size: 1.5rem;
+     }
+   
+     .service-card p {
+       font-size: 1.1rem;
+       color: #1a202c;
+       font-weight: 400;
+     }
+   
+     .steps-list li {
+       padding: 1rem;
+       margin: 0.5rem 0;
+       background: var(--secondary);
+       border-radius: 0.5rem;
+       color: #1a202c;
+       transition: all 0.3s;
+       font-size: 1.1rem;
+       font-weight: 500;
+     }
+   
+     .steps-list li:hover {
+       background: var(--primary);
+       color: white;
+       transform: translateX(10px);
+     }
+   
+     .benefit-card {
+       background: linear-gradient(135deg, #F5F7FF, #FFFFFF);
+       padding: 1.5rem;
+       border-radius: 0.75rem;
+       text-align: center;
+       color: var(--secondary-foreground);
+       border: 2px solid #E8F4FF;
+       transition: all 0.3s;
+     }
+   
+     .benefit-card:hover {
+       border-color: var(--accent);
+       transform: translateY(-3px);
+     }
+   
+     .benefit-card h4 {
+       color: var(--accent);
+       margin-bottom: 0.5rem;
+       font-size: 1.4rem;
+       font-weight: 600;
+     }
+   
+     .benefit-card p {
+       color: #1a202c;
+       font-size: 1.05rem;
+       font-weight: 400;
+     }
+   
+     .stats {
+       background: linear-gradient(135deg, #6C63FF, #FF6B6B);
+       padding: 3rem 1.5rem;
+       text-align: center;
+       color: white;
+     }
+   
+     .stats h2 {
+       font-size: 2.5rem;
+       margin-bottom: 1.5rem;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+     }
+   
+     .stats-grid {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+       gap: 1.5rem;
+       max-width: 1200px;
+       margin: 0 auto;
+     }
+   
+     .stat-card {
+       background: rgba(255, 255, 255, 0.9);
+       padding: 1.5rem;
+       border-radius: 1rem;
+       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+       transition: transform 0.3s;
+     }
+   
+     .stat-card:hover {
+       transform: translateY(-5px);
+     }
+   
+     .stat-card h3 {
+       color: var(--accent);
+       font-size: 2.5rem;
+       margin-bottom: 0.25rem;
+     }
+   
+     .stat-card p {
+       color: #1a202c;
+       font-size: 1.2rem;
+       font-weight: 500;
+       margin: 0;
+     }
+   
+     .contact {
+       text-align: center;
+       padding: 4rem 1.5rem;
+       background: var(--secondary);
+     }
+   
+     .contact h2 {
+       font-size: 2.5rem;
+       color: #1a202c;
+       margin-bottom: 1.5rem;
+       font-weight: 700;
+     }
+   
+     .contact p {
+       font-size: 1.2rem;
+       color: #1a202c;
+       font-weight: 500;
+     }
+   
+     footer {
+       background: var(--primary);
+       color: var(--primary-foreground);
+       text-align: center;
+       padding: 2rem 1.5rem;
+       border-top: 1px solid rgba(255, 255, 255, 0.1);
+     }
+   
+     footer p {
+       font-size: 1.1rem;
+       line-height: 1.8;
+     }
+   
+     @media (max-width: 768px) {
+       nav {
+         display: none;
+       }
+       .hero h1 {
+         font-size: 2.5rem;
+       }
+     }
+   
+     h2 {
+       font-size: 2.5rem;
+       color: #1a202c;
+       margin-bottom: 1.5rem;
+       font-weight: 700;
+     }
+   
+     h3 {
+       font-size: 1.8rem;
+       margin-bottom: 1rem;
+       font-weight: 700;
+     }
+    </style>
+   </head>
+   <body>
+   
+   <header>
+       <svg width="150" height="50" viewBox="0 0 150 50">
+           <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#ffffff">Viarony</text>
+       </svg>
+       <nav>
+           <a href="/">Home</a>
+           <a href="/services">Services</a>
+           <a href="/about">About</a>
+           <a href="/signup">Signup</a>
+           <a href="/contact">Contact</a>
+       </nav>
+   </header>
+   
+   <section class="hero">
+       <h1>Welcome to Viarony</h1>
+       <p>Empowering Your Financial Future with Innovative Solutions</p>
+       <a href="/signup"><button>Get Started</button></a>
+   </section>
+   
+   <section class="features">
+       <h2 style="text-align: center; margin-bottom: 3rem;">Why Choose Viarony?</h2>
+       <div class="features-grid">
+           <div class="feature-card">
+               <h3>Secure Platform</h3>
+               <p>State-of-the-art security measures to protect your investments and personal information.</p>
+           </div>
+           <div class="feature-card">
+               <h3>Community Driven</h3>
+               <p>Join a growing community of investors and borrowers working together for mutual benefit.</p>
+           </div>
+           <div class="feature-card">
+               <h3>Competitive Returns</h3>
+               <p>Earn attractive returns on your investments through our money market platform.</p>
+           </div>
+       </div>
+   </section>
+   
+   <section class="service-section">
+       <div class="service-card">
+           <h3>User Registration</h3>
+           <p>Join our secure financial platform with a simple registration process:</p>
+           <ul class="steps-list">
+               <li>Personal Information Verification</li>
+               <li>KYC Documentation</li>
+               <li>Secure Account Creation</li>
+               <li>Two-Factor Authentication Setup</li>
+           </ul>
+       </div>
+   
+       <div class="service-card">
+           <h3>Money Market Platform</h3>
+           <p>Join our innovative money market platform where users can:</p>
+           <div class="service-benefits">
+               <div class="benefit-card">
+                   <h4>Contribute</h4>
+                   <p>Pool resources with other investors</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Earn</h4>
+                   <p>Get competitive returns on investments</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Track</h4>
+                   <p>Monitor your investments in real-time</p>
+               </div>
+           </div>
+       </div>
+   
+       <div class="service-card">
+           <h3>Loan Services</h3>
+           <p>Access quick loans backed by our money market platform:</p>
+           <div class="service-benefits">
+               <div class="benefit-card">
+                   <h4>Quick Approval</h4>
+                   <p>Get loan decisions within 24 hours</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Competitive Rates</h4>
+                   <p>Benefit from community-driven interest rates</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Flexible Terms</h4>
+                   <p>Choose repayment terms that work for you</p>
+               </div>
+           </div>
+       </div>
+   </section>
+   
+   <section class="stats">
+       <h2>Our Impact</h2>
+       <div class="stats-grid">
+           <div class="stat-card">
+               <h3>10K+</h3>
+               <p>Active Users</p>
+           </div>
+           <div class="stat-card">
+               <h3>$5M+</h3>
+               <p>Total Investments</p>
+           </div>
+           <div class="stat-card">
+               <h3>95%</h3>
+               <p>Customer Satisfaction</p>
+           </div>
+           <div class="stat-card">
+               <h3>24/7</h3>
+               <p>Support Available</p>
+           </div>
+       </div>
+   </section>
+   
+   <section class="contact">
+       <h2>Ready to Get Started?</h2>
+       <p>Join our growing community of investors and borrowers today.</p>
+       <a href="/signup"><button>Register Now</button></a>
+   </section>
+   
+   <footer>
+       <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+       <p>Address: 123 Financial District, Business City, BZ 12345</p>
+       <p>&copy; 2023 Viarony. All rights reserved.</p>
+   </footer>
+   
+   </body></html>
