@@ -1,0 +1,324 @@
+<html><head><base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viarony - About Us</title>
+    <style>
+     :root {
+       --background: #ffffff;
+       --foreground: #2d3748;
+       --card: #ffffff;
+       --card-foreground: #2d3748;
+       --primary: #4f46e5;
+       --primary-foreground: #ffffff;
+       --secondary: #f7f9fc;
+       --secondary-foreground: #334155;
+       --accent: #6366f1;
+       --accent-foreground: #ffffff;
+       --success: #059669;
+       --warning: #d97706;
+       --muted: #f1f5f9;
+     }
+   
+     * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+     }
+   
+     body {
+       margin: 0;
+       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+       background: var(--background);
+       color: var(--foreground);
+       line-height: 1.6;
+     }
+   
+     header {
+       background: var(--card);
+       color: var(--foreground);
+       padding: 1rem 1.5rem;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+       position: sticky;
+       top: 0;
+       z-index: 100;
+     }
+   
+     .logo {
+       font-weight: bold;
+       font-size: 1.5rem;
+       color: var(--primary);
+       text-decoration: none;
+     }
+   
+     nav a {
+       margin-right: 1.5rem;
+       color: var(--foreground);
+       text-decoration: none;
+       font-weight: 500;
+       transition: color 0.2s;
+       position: relative;
+     }
+   
+     nav a:after {
+       content: '';
+       position: absolute;
+       width: 0;
+       height: 2px;
+       bottom: -4px;
+       left: 0;
+       background: var(--primary);
+       transition: width 0.3s ease;
+     }
+   
+     nav a:hover:after {
+       width: 100%;
+     }
+   
+     nav a:hover {
+       color: var(--primary);
+     }
+   
+     .hero {
+       background: linear-gradient(135deg, var(--primary), var(--accent));
+       color: var(--primary-foreground);
+       padding: 6rem 1.5rem;
+       text-align: center;
+       position: relative;
+       overflow: hidden;
+     }
+   
+     .hero h1 {
+       font-size: 3.5rem;
+       margin-bottom: 1.5rem;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+       position: relative;
+       z-index: 1;
+     }
+   
+     .hero p {
+       font-size: 1.25rem;
+       margin-bottom: 2.5rem;
+       opacity: 0.9;
+       position: relative;
+       z-index: 1;
+     }
+   
+     .service-section {
+       padding: 4rem 1.5rem;
+       max-width: 1200px;
+       margin: 0 auto;
+     }
+   
+     .service-card {
+       background: var(--card);
+       padding: 2rem;
+       border-radius: 1rem;
+       margin-bottom: 2rem;
+       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+       transition: transform 0.3s ease;
+     }
+   
+     .service-card h3 {
+       color: var(--primary);
+       margin-bottom: 1rem;
+       font-size: 1.5rem;
+     }
+   
+     .steps-list {
+       list-style: none;
+       padding: 0;
+     }
+   
+     .steps-list li {
+       padding: 1rem;
+       margin: 0.5rem 0;
+       background: var(--secondary);
+       border-radius: 0.5rem;
+       color: var(--secondary-foreground);
+       transition: background 0.3s ease;
+     }
+   
+     .steps-list li:hover {
+       background: var(--muted);
+     }
+   
+     .service-benefits {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+       gap: 1.5rem;
+       margin-top: 2rem;
+     }
+   
+     .benefit-card {
+       background: var(--secondary);
+       padding: 1.5rem;
+       border-radius: 0.75rem;
+       text-align: center;
+       color: var(--secondary-foreground);
+       transition: transform 0.3s ease;
+     }
+   
+     .benefit-card:hover {
+       transform: scale(1.05);
+     }
+   
+     .benefit-card h4 {
+       color: var(--primary);
+       margin-bottom: 0.5rem;
+     }
+   
+     .registration-process {
+       background: linear-gradient(135deg, var(--primary), var(--accent));
+       color: var(--primary-foreground);
+       padding: 3rem 1.5rem;
+       border-radius: 1rem;
+       margin: 2rem 0;
+       position: relative;
+       overflow: hidden;
+     }
+   
+     .contact {
+       text-align: center;
+       padding: 4rem 1.5rem;
+       background: var(--secondary);
+     }
+   
+     footer {
+       background: var(--card);
+       color: var(--foreground);
+       text-align: center;
+       padding: 2rem 1.5rem;
+       border-top: 1px solid var(--secondary);
+     }
+   
+     @media (max-width: 768px) {
+       nav {
+         display: none;
+       }
+       .hero h1 {
+         font-size: 2.5rem;
+       }
+       .service-benefits {
+         grid-template-columns: 1fr;
+       }
+     }
+    </style>
+   </head>
+   <body>
+   
+   <header>
+       <svg width="150" height="50" viewBox="0 0 150 50">
+           <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#6366f1">Viarony</text>
+       </svg>
+       <nav>
+        <a href="/">Home</a>
+        <a href="/services">Services</a>
+        <a href="/about">About</a>
+        <a href="/signup">Signup</a>
+        <a href="/contact">Contact</a>
+       </nav>
+   </header>
+   
+   <section class="hero">
+       <h1>About Viarony</h1>
+       <p>Building the Future of Community-Driven Finance</p>
+   </section>
+   
+   <section class="service-section">
+       <div class="service-card">
+           <h3>Our Story</h3>
+           <p>Founded in 2023, Viarony emerged from a vision to democratize financial services and create a community-driven platform that benefits everyone. We believe in the power of collective financial participation and transparent, accessible financial services.</p>
+       </div>
+   
+       <div class="service-card">
+           <h3>Our Mission</h3>
+           <div class="service-benefits">
+               <div class="benefit-card">
+                   <h4>Accessibility</h4>
+                   <p>Making financial services available to everyone, regardless of their background</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Innovation</h4>
+                   <p>Leveraging technology to create better financial solutions</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Community</h4>
+                   <p>Building a strong, supportive financial community</p>
+               </div>
+           </div>
+       </div>
+   
+       <div class="service-card">
+           <h3>What Sets Us Apart</h3>
+           <ul class="steps-list">
+               <li>Community-Driven Platform: Our money market solutions are powered by user participation</li>
+               <li>Transparent Operations: Clear, understandable terms and conditions</li>
+               <li>Innovative Technology: State-of-the-art security and user experience</li>
+               <li>Dedicated Support: 24/7 customer service team</li>
+           </ul>
+       </div>
+   
+       <div class="service-card">
+           <h3>Our Team</h3>
+           <div class="service-benefits">
+               <div class="benefit-card">
+                   <h4>Leadership</h4>
+                   <p>Experienced professionals from finance and technology sectors</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Technology</h4>
+                   <p>Skilled developers and security experts</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Support</h4>
+                   <p>Dedicated customer service professionals</p>
+               </div>
+           </div>
+       </div>
+   
+       <div class="registration-process">
+           <h3>Our Values</h3>
+           <ul class="steps-list">
+               <li>Integrity: Maintaining the highest standards of financial ethics</li>
+               <li>Innovation: Continuously improving our services</li>
+               <li>Inclusion: Creating opportunities for everyone</li>
+               <li>Security: Protecting our users' assets and data</li>
+               <li>Community: Fostering a supportive financial ecosystem</li>
+           </ul>
+       </div>
+   
+       <div class="service-card">
+           <h3>Achievements</h3>
+           <div class="service-benefits">
+               <div class="benefit-card">
+                   <h4>Growing Community</h4>
+                   <p>Thousands of active users and growing</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>Secure Platform</h4>
+                   <p>Zero security incidents since launch</p>
+               </div>
+               <div class="benefit-card">
+                   <h4>User Satisfaction</h4>
+                   <p>98% positive user feedback</p>
+               </div>
+           </div>
+       </div>
+   </section>
+   
+   <section class="contact">
+       <h2>Join Our Journey</h2>
+       <p>Be part of the financial revolution with Viarony</p>
+       <a href="/signup"><button>Get Started Today</button></a>
+   </section>
+   
+   <footer>
+       <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+       <p>Address: 123 Financial District, Business City, BZ 12345</p>
+       <p>&copy; 2023 Viarony. All rights reserved.</p>
+   </footer>
+   
+   </body></html>
