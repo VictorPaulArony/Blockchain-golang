@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../static/style.css">
+    
 </head>
 
 <body>
     <header>
+        <svg width="150" height="50" viewBox="0 0 150 50">
+            <text x="10" y="35" font-family="Arial" font-size="24" font-weight="bold" fill="#6366f1">Viarony</text>
+        </svg>
         <nav>
             <a href="/money-market">Join Money Market</a>
-        </nav>
-        <nav>
             <a href="/loan">Request Loan</a>
+            <a href="/investors">Join Investors</a>
+            <a href="/logout">Logout</a>
         </nav>
-
-        <h1>Welcome, {{.User.Name}}</h1>
-
     </header>
     <main>
         <section>
@@ -115,6 +116,11 @@
         </section>
         
     </main>
+    <footer>
+        <p>Contact us: support@viarony.com | Sales: sales@viarony.com</p>
+        <p>Address: 123 Financial District, Business City, BZ 12345</p>
+        <p>&copy; 2023 Viarony. All rights reserved.</p>
+    </footer>
 </body>
 
 </html>
