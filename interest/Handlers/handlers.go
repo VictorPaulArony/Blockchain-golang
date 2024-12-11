@@ -18,6 +18,9 @@ var templates = template.Must(template.New("").ParseFiles(
 	"templates/index.html",
 	"templates/mmf_deposit.html",
 	"templates/loan_request.html",
+	"templates/service.html",
+	"templates/about.html",
+	"templates/contact.html",
 ))
 
 // Registration handles user registration
@@ -110,6 +113,18 @@ func renderTemplate(w http.ResponseWriter, templateName string, data interface{}
 // IndexHandler serves the signup page
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "index.html", nil)
+}
+
+func ServiceHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "service.html", nil)
+}
+
+func AboutHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "about.html", nil)
+}
+
+func ContactHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "contact.html", nil)
 }
 
 // ErrorHandler displays error messages with corresponding status codes
