@@ -113,6 +113,7 @@ func MaturedDepositsHandler(w http.ResponseWriter, r *http.Request) {
 func setupTemplates() *template.Template {
 	funcMap := template.FuncMap{
 		"unixToTime": helpers.UnixToTime,
+		"mul":        helpers.Mul,
 	}
 
 	tmpl := template.New("").Funcs(funcMap)
