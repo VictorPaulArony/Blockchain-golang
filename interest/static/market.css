@@ -14,11 +14,11 @@
   --muted: #f1f5f9;
 }
 
-* {
+/* * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
+} */
 
 body {
   margin: 0;
@@ -27,45 +27,63 @@ body {
   color: var(--foreground);
   line-height: 1.6;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-size: 1.05rem;
+  /* display: flex;
+  flex-direction: column; */
 }
 
+
 header {
-  background: var(--card);
-  color: var(--foreground);
+  background: linear-gradient(135deg, var(--primary), #9bafd9);
+  color: var(--primary-foreground);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  position: sticky;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+  position: fixed;
+  width: 100%;
   top: 0;
-  z-index: 100;
-}
-
-main {
-  flex: 1;
-  padding: 2rem 0;
-}
-
-.logo {
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: var(--primary);
-  text-decoration: none;
+  z-index: 1000;
+  box-sizing: border-box;
 }
 
 nav a {
   margin-right: 1.5rem;
-  color: var(--foreground);
+  color: var(--primary-foreground);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
-  position: relative;
+  transition: all 0.3s;
 }
 
-nav a:after {
+nav a:hover {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.hero {
+  background: linear-gradient(135deg, #6C63FF, #9bafd9);
+  color: var(--accent-foreground);
+  padding: 8rem 1.5rem 6rem;
+  text-align: center;
+  margin-top: 60px;
+  /* width: 100%; */
+}
+.hero h1 {
+  font-size: 3.5rem;
+  color: var(--accent-foreground);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero p {
+  font-size: 1.35rem;
+  margin-bottom: 2.5rem;
+  opacity: 1;
+  font-weight: 500;
+}
+
+/* nav a:after {
   content: '';
   position: absolute;
   width: 0;
@@ -82,15 +100,27 @@ nav a:hover:after {
 
 nav a:hover {
   color: var(--primary);
+} */
+
+main {
+  flex: 1;
+  padding: 2rem 0;
 }
 
+.logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--primary);
+  text-decoration: none;
+}
 section {
-  max-width: 1200px;
-  margin: 2rem auto;
+  /* max-width: 1200px; */
+  /* margin: 2rem auto; */
   padding: 2rem;
   background: var(--card);
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  
 }
 
 h1, h2 {
@@ -153,6 +183,25 @@ footer {
   border-top: 1px solid var(--secondary);
   margin-top: auto;
 }
+/* loan sections */
+.loan-info {
+  background-color: #f4f4f4;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
 
 @media (max-width: 768px) {
   nav {
@@ -160,7 +209,7 @@ footer {
   }
   section {
     padding: 1rem;
-    margin: 1rem;
+    /* margin: 1rem; */
   }
   form {
     padding: 0 1rem;
