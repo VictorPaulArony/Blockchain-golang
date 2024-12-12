@@ -43,37 +43,50 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Insufficient funds", http.StatusForbidden)
 			return
 		}
+		if currentUser == nil {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
 
 		// load all the investors data from the json db
 		investorData := helpers.LoadInvestorData()
 
-		for _, investors := range investorData.Inverstors {
-			for _, investor := range investors {
-				if investor.Investor == email {
-					currentUser.Email = investor.Investor
-
-					newInvestor := helpers.MoneyMarketInvestor{
-						ID:           investor.ID,
-						Investor:     investor.Investor,
-						TotalAmount:  investor.TotalAmount + amount,
-						InterestRate: investor.InterestRate,
-						Status:       investor.Status,
-						Members:      investor.Members,
-					}
-					investorData.Inverstors[email] = append(investorData.Inverstors[email], newInvestor)
-					break
-
-				}
-			}
+		// Find and update the corresponding investor
+		investor, exists := investorData.Investors[email]
+		if !exists {
+			http.Error(w, "Investor not found", http.StatusNotFound)
+			return
 		}
+
+		// for _, investors := range investorData.Investors {
+		// for _, investor := range investorData.Investors {
+		// 	if investor.Name == email {
+		// 		currentUser.Email = investor.Name
+
+		// 		newInvestor := helpers.MoneyMarketInvestor{
+		// 			ID:           investor.ID,
+		// 			Name:         investor.Name,
+		// 			Amount:       investor.Amount + amount,
+		// 			InterestRate: investor.InterestRate,
+		// 			Status:       investor.Status,
+		// 			// Members:      investor.Members,
+		// 		}
+		// 		// investorData.Investors[email] = newInvestor
+		// 		// investorData.Investors[email].Email = append(investorData.Investors[email].Email, newInvestor)
+		// 		break
+
+		// 	}
+		// }
+
+		investor.Amount += amount
 
 		currentUser.Balance -= amount
 		wallet.SaveData()
 
 		// save updated investor data
-		helpers.SaveInverstors(investorData)
+		helpers.SaveInvestors(investorData)
 
-		http.Redirect(w, r, "/investors", http.StatusSeeOther)
+		http.Redirect(w, r, "/investor", http.StatusSeeOther)
 		return
 
 	}
