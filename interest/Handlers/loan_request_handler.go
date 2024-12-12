@@ -44,11 +44,10 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check loan eligibility of the users
+	// Check loan eligibility of the user
 	now := time.Now()
 	joinDate, _ := time.Parse("2006-01-02", currentUser.JoinDate)
-	membershipDuration := now.Sub(joinDate).Hours() / (24 * 30) // using Months for now
-	// fmt.Printf("%v\n", now.Sub(joinDate).String())
+	membershipDuration := now.Sub(joinDate).Hours() / (24 * 30) // Membership duration in months
 
 	if membershipDuration < 6 {
 		http.Error(w, "You must be a member for at least 6 months to apply for a loan.", http.StatusForbidden)
@@ -59,8 +58,7 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 	for _, txn := range currentUser.Transactions {
 		totalTransactions += txn.Amount
 	}
-
-	totalTransactions = totalTransactions / 2.0
+	totalTransactions /= 2.0
 
 	if totalTransactions < transactionThreshold {
 		http.Error(w, "You must have transacted more than a certain amount to be eligible.", http.StatusForbidden)
@@ -90,6 +88,9 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 	// Calculate maximum loan amount
 	maxLoan := baseLoanAmount + (totalTransactions * loanMultiplier / 100)
 
+	// Load investors data
+	investors := helpers.LoadInvestorData()
+
 	if r.Method == http.MethodGet {
 		// Prepare data for rendering
 		data := struct {
@@ -98,18 +99,20 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 			MaxLoanAmount  float64
 			CreditScore    float64
 			MembershipTime float64
+			Investors      map[string]*helpers.MoneyMarketInvestor
 		}{
 			User:           *currentUser,
 			LoanGrade:      loanGrade,
 			MaxLoanAmount:  maxLoan,
 			CreditScore:    creditScore,
 			MembershipTime: membershipDuration,
+			Investors:      investors.Investors,
 		}
 
 		// Render loan request form
 		tmpl := setupTemplates()
 		if err := tmpl.ExecuteTemplate(w, "loan_request.html", data); err != nil {
-			http.Error(w, "Error rendering template", http.StatusInternalServerError)
+			ErrorHandler(w, http.StatusInternalServerError)
 		}
 		return
 	}
@@ -120,14 +123,30 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	investorEmail := r.FormValue("investor")
 	requestedLoan, err := strconv.ParseFloat(r.FormValue("amount"), 64)
 	if err != nil || requestedLoan <= 0 || requestedLoan > maxLoan {
 		http.Error(w, "Invalid loan amount.", http.StatusBadRequest)
 		return
 	}
 
-	// amount to be paid by user an interest is add to it and stored in the user loaners db
-	expaidToPay := requestedLoan + requestedLoan*(0.05)
+	// Get the selected investor
+	investor, exists := investors.Investors[investorEmail]
+	if !exists {
+		http.Error(w, "Selected investor not found", http.StatusBadRequest)
+		return
+	}
+
+	// Check if investor has sufficient funds
+	if investor.Amount < requestedLoan {
+		http.Error(w, "Insufficient funds from selected investor", http.StatusBadRequest)
+		return
+	}
+
+	interestRate := investor.InterestRate
+
+	// Calculate total amount to be repaid
+	expectedToPay := requestedLoan + (requestedLoan * interestRate)
 
 	// Record the loan request
 	newLoan := helpers.LoanRequest{
@@ -138,22 +157,28 @@ func LoanHandler(w http.ResponseWriter, r *http.Request) {
 			Maturity: 1,
 		},
 		ID:        uuid.New().String(),
-		Amount:    expaidToPay,
+		Amount:    expectedToPay,
 		Status:    "Approved",
 		Requested: time.Now().Format("2006-01-02"),
 		Grade:     loanGrade,
 		DueDate:   time.Now().Add(30 * 24 * time.Hour).Unix(), // Set due date to 30 days from now
 	}
 
-	// expected is also add to user load slice in user main account
+	// Deduct the investor's amount after borrowing
+	investor.Amount -= requestedLoan
+	// investor.LoanMembers[newLoan.Wallet] = newLoan
+
+	// Update investors data
+	investors.Investors[investorEmail] = investor
+	helpers.SaveInvestors(investors)
+
+	// Add the loan to the user's loans
 	currentUser.Loans = append(currentUser.Loans, newLoan)
 
-	if err := helpers.AddMoneyMarketLoan(newLoan); err != nil {
-		http.Error(w, "Error adding money market loaner", http.StatusInternalServerError)
-		return
-	}
-	// Save updated user data with the requested amount
+	// Update the user's balance
 	currentUser.Balance += requestedLoan
+
+	// Save wallet data
 	if err := wallet.SaveData(); err != nil {
 		http.Error(w, "Error saving loan data", http.StatusInternalServerError)
 		return
