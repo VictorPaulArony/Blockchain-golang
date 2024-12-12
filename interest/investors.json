@@ -1,0 +1,33 @@
+{
+  "total_funds": 2000,
+  "investors": {
+    "smallypauls@gmail.com": {
+      "id": "f831be09-4b85-4dad-a2be-60bf4698a44c",
+      "name": "smally pauls",
+      "manager_email": "smallypauls@gmail.com",
+      "phone": "0712345678",
+      "wallet": "57eb165b893ddb2a6dbd793e4790f1f44570791933ba933a12641e8e893bb146",
+      "amount": 1000,
+      "investment_type": "debt",
+      "description": "1234",
+      "interest_rate": 0.5,
+      "status": "Active",
+      "loan_members": {},
+      "mmf_members": {}
+    },
+    "victor@gmail.com": {
+      "id": "ebc3457d-1f94-475b-9d50-be068a1964ce",
+      "name": "victor",
+      "manager_email": "victor@gmail.com",
+      "phone": "0759080909",
+      "wallet": "bd849a4327fb1a3062e2bab9fd3dc270ead5fb7d87c5f712cbd391c764cbe404",
+      "amount": 1000,
+      "investment_type": "equity",
+      "description": "qwerty",
+      "interest_rate": 0.5,
+      "status": "Active",
+      "loan_members": {},
+      "mmf_members": {}
+    }
+  }
+}
