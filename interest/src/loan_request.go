@@ -6,16 +6,16 @@ import (
 	"os"
 )
 
-// LoanRequest using the common struct with a status field
-type LoanRequest struct {
-	MoneyMarketTransaction
-	ID        string  `json:"id"`
-	Amount    float64 `json:"amount"`
-	Status    string  `json:"status"` // Paid, Approved, Late, Defaulted
-	Requested string  `json:"requested"`
-	Grade     string  `json:"grade"`
-	DueDate   int64   `json:"due_date"` // Add a due date for the loan repayment
-}
+// // LoanRequest using the common struct with a status field
+// type LoanRequest struct {
+// 	MoneyMarketTransaction
+// 	ID        string  `json:"id"`
+// 	Amount    float64 `json:"amount"`
+// 	Status    string  `json:"status"` // Paid, Approved, Late, Defaulted
+// 	Requested string  `json:"requested"`
+// 	Grade     string  `json:"grade"`
+// 	DueDate   int64   `json:"due_date"` // Add a due date for the loan repayment
+// }
 
 // MoneyMarketLoan struct for managing loans
 type MoneyMarketLoan struct {
